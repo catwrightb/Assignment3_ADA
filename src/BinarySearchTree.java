@@ -214,7 +214,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         //
     }
 
-    //hooer methods
+    //hooker methods
     protected void nodeFinished(Node node){
         //
     }

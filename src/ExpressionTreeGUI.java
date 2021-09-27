@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Almost Complete GUI - just need to finish the code when pressing the buttons and updating
@@ -12,17 +13,21 @@ import java.util.Map;
  */
 public class ExpressionTreeGUI extends JPanel implements ActionListener {
 
-    private final JButton evaluateButton, buildTreeButton;
+    private final JButton removeNodeButton, addNodeButton;
 
     private DrawPanel drawPanel;
     private ExpNode root; //root node
     private BinarySearchTree.Node testroot; //USE THIS root node
     private int numberNodes = 0;
-    private JTextField postFixField;
+    private JTextField addNodeTextField;
+    private JTextField removeNodeTextField;
     public static int PANEL_H = 500;
     public static int PANEL_W = 700;
     private JLabel nodeCounterLabel;
     private final int BOX_SIZE = 40;
+    private JComboBox<String> treeTypeDropDown;
+    private String treeType;
+    private String[] inputItemList;
 
     public ExpressionTreeGUI() {
         super(new BorderLayout());
@@ -33,32 +38,47 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
         super.setPreferredSize(new Dimension(PANEL_W, PANEL_H + 30));
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(PANEL_W, 30));
+        JPanel treeTypePanel = new JPanel();
+        treeTypePanel.setPreferredSize(new Dimension(PANEL_W, 30));
         drawPanel = new DrawPanel();
 
-        evaluateButton = new JButton("Evaluate to infix");
-        buildTreeButton = new JButton("Build Expression Tree");
+        removeNodeButton = new JButton("Remove");
+        addNodeButton = new JButton("Add to tree");
 
-        evaluateButton.addActionListener((ActionListener) this);
-        buildTreeButton.addActionListener((ActionListener) this);
+        removeNodeButton.addActionListener((ActionListener) this);
+        addNodeButton.addActionListener((ActionListener) this);
 
-        postFixField = new JTextField(20);
 
-        buttonPanel.add(postFixField);
-        buttonPanel.add(buildTreeButton);
-        buttonPanel.add(evaluateButton);
+        addNodeTextField = new JTextField(10);
+        removeNodeTextField = new JTextField(10);
+
+        buttonPanel.add(addNodeTextField);
+        buttonPanel.add(addNodeButton);
+        buttonPanel.add(removeNodeTextField);
+        buttonPanel.add(removeNodeButton);
+
+        String[] types = {"-", "Binary Search Tree", "Persistent", "Red and Black Tree"};
+        treeTypeDropDown = new JComboBox<>(types);
+        treeTypeDropDown.addActionListener((ActionListener) this);
+
+        JPanel topPanel = new JPanel();
+        topPanel.add(treeTypeDropDown, BorderLayout.NORTH);
 
         super.add(drawPanel, BorderLayout.CENTER);
         super.add(buttonPanel, BorderLayout.SOUTH);
 
         nodeCounterLabel = new JLabel("Number of Nodes: " + 0);
-        super.add(nodeCounterLabel, BorderLayout.NORTH);
+        topPanel.add(nodeCounterLabel, BorderLayout.SOUTH);
+
+        super.add(topPanel, BorderLayout.NORTH);
+
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
 
-        if (source == evaluateButton) {   //finish this button event to handle the evaluation and output to infix of the tree
+        if (source == removeNodeButton) {   //finish this button event to handle the evaluation and output to infix of the tree
             if (root == null) {
                 JOptionPane.showMessageDialog(this, "Tree is null, not built", "INFO",
                         JOptionPane.ERROR_MESSAGE);
@@ -73,43 +93,22 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
 
             }
 
-        } else if (source == buildTreeButton && postFixField.getText() != null) {
+        }
+        else if (source == treeTypeDropDown){
+            treeType = Objects.requireNonNull(treeTypeDropDown.getSelectedItem()).toString();
+            System.out.println(treeType);
+
+        }
+        else if (source == addNodeButton && addNodeTextField.getText() != null) {
 
             // COMPLETE ME!!!!!!!!!!
             //Use ExpressionTreeBuilder to build the tree
-            String s = postFixField.getText();
+            String s = addNodeTextField.getText();
             String[] strings = s.split(" ");
 
-           //check the input before calling to buildtree 
-           //   only want to allow numbers and symbols 
-           //   if no symbol is present or no numbers are present then tree will not build 
-//            String regex = "[0-9]+";
-//
-//            int number = 0;
-//            int operator = 0;
-//            int disconti = 0;
-//
-//            for (int i = 0; i < strings.length; i++) {
-//                String c = strings[i];
-//
-//                if (c.matches(regex)){
-//                    number++;
-//                }
-//                else if (c.equals("+") || c.equals("-") || c.equals("/") || c.equals("*") || c.equals("~")) {
-//                    operator++;
-//                }
-//                else {
-//                    disconti++;
-//                }
-//            }
-//
-//            if (disconti == 0 && number > 0 && operator > 0){
-//                root = ExpressionTreeBuilder.buildExpressionTree(strings);
-//            }
-//            else if (disconti > 0){
-//                JOptionPane.showMessageDialog(this, "Please enter a equation with proper symbols (digits or + , - , * , / and ~).", "INFO",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
+           //check the input before calling to buildtree
+
+
 
             // puts list in level order
 
