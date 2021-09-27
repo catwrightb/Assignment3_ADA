@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
     private final int BOX_SIZE = 40;
     private JComboBox<String> treeTypeDropDown;
     private String treeType;
-    private String[] inputItemList;
+    private ArrayList<String> inputItemList = new ArrayList<>();
 
     public ExpressionTreeGUI() {
         super(new BorderLayout());
@@ -97,6 +98,9 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
         else if (source == treeTypeDropDown){
             treeType = Objects.requireNonNull(treeTypeDropDown.getSelectedItem()).toString();
             System.out.println(treeType);
+            inputItemList.clear();
+            root = null;
+            drawPanel.repaint();
 
         }
         else if (source == addNodeButton && addNodeTextField.getText() != null) {
@@ -107,13 +111,15 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             String[] strings = s.split(" ");
 
            //check the input before calling to buildtree
+            inputItemList.add(strings[0]);
 
 
 
             // puts list in level order
 
             BinarySearchTree<String> test = new BinarySearchTree<>();
-            for (String string : strings) {
+
+            for (String string : inputItemList) {
                 test.add(string);
             }
             System.out.println(test);
@@ -147,18 +153,22 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             if (root != null) {
                 drawTree(g, getWidth());
             }
+
         }
 
         public void drawTree(Graphics g, int width) {
-            drawNode(g, testroot, BOX_SIZE, 0, 0, new HashMap<>());
+            if (treeType.equals("Binary Search Tree")){
+                drawBST(g, testroot, BOX_SIZE, 0, 0, new HashMap<>());
+            }
+
         }
 
-        private int drawNode(Graphics g, BinarySearchTree.Node current,
-                             int x, int level, int nodeCount, Map<BinarySearchTree.Node, Point> map) {
+        private int drawBST(Graphics g, BinarySearchTree.Node current,
+                            int x, int level, int nodeCount, Map<BinarySearchTree.Node, Point> map) {
 
 
             if (current.leftChild != null) {
-                nodeCount = drawNode(g, current.leftChild, x, level + 1, nodeCount, map);
+                nodeCount = drawBST(g, current.leftChild, x, level + 1, nodeCount, map);
             }
 
             int currentX = x + nodeCount * BOX_SIZE;
@@ -167,7 +177,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             map.put(current, new Point(currentX, currentY));
 
             if (current.rightChild != null) {
-                nodeCount = drawNode(g, current.rightChild, x, level + 1, nodeCount, map);
+                nodeCount = drawBST(g, current.rightChild, x, level + 1, nodeCount, map);
             }
 
             g.setColor(Color.red);
