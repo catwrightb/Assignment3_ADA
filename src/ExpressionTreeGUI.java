@@ -17,8 +17,9 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
     private final JButton removeNodeButton, addNodeButton;
 
     private DrawPanel drawPanel;
-    private ExpNode root; //root node
+    private BinarySearchTree.Node root; //root node
     private BinarySearchTree.Node testroot; //USE THIS root node
+    private RedBlackNode rbtroot; //USE THIS root node
     private int numberNodes = 0;
     private JTextField addNodeTextField;
     private JTextField removeNodeTextField;
@@ -28,7 +29,8 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
     private final int BOX_SIZE = 40;
     private JComboBox<String> treeTypeDropDown;
     private String treeType;
-    private ArrayList<String> inputItemList = new ArrayList<>();
+    private ArrayList<Integer> inputItemList = new ArrayList<>();
+    RedBlackTree redBlackTree;
 
     public ExpressionTreeGUI() {
         super(new BorderLayout());
@@ -103,32 +105,61 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             drawPanel.repaint();
 
         }
-        else if (source == addNodeButton && addNodeTextField.getText() != null) {
+        else if (source == addNodeButton && addNodeTextField.getText() != null && treeType != null) {
 
             // COMPLETE ME!!!!!!!!!!
             //Use ExpressionTreeBuilder to build the tree
             String s = addNodeTextField.getText();
             String[] strings = s.split(" ");
+            String firstInput = strings[0];
 
-           //check the input before calling to buildtree
-            inputItemList.add(strings[0]);
-
-
-
-            // puts list in level order
-
-            BinarySearchTree<String> test = new BinarySearchTree<>();
-
-            for (String string : inputItemList) {
-                test.add(string);
+            if (!isNumber(firstInput)){
+                JOptionPane.showMessageDialog(this, "Please enter numbers only", "INFO",
+                        JOptionPane.ERROR_MESSAGE);
             }
-            System.out.println(test);
+            else {
 
-            root = ExpressionTreeBuilder.buildExpressionTree(strings, root, 0);
+                Integer i = Integer.parseInt(strings[0]);
+                if (!s.isEmpty()) {
+                    inputItemList.add(i);
+                }
 
-            testroot = test.root;
+
+                // puts list in level order
+
+                if (treeType.equals("Binary Search Tree")) {
+                    BinarySearchTree<Integer> test = new BinarySearchTree<>();
+
+                    for (Integer string : inputItemList) {
+                        test.add(string);
+                    }
+                    System.out.println(test);
+                    root = test.root;
+                    testroot = test.root;
+
+                } else if (treeType.equals("Red and Black Tree")) {
+                    redBlackTree = new RedBlackTree();
+
+                    for (Integer integer : inputItemList) {
+                        redBlackTree.insert(integer);
+                    }
+                    System.out.println(redBlackTree);
+                    rbtroot = redBlackTree.getRoot();
 
 
+                } else if (treeType.equals("Persistent")) {
+
+                }
+
+            }
+
+        }
+        else if (source == addNodeButton && addNodeTextField.getText() == null
+                || treeType != null || treeType == "-"){
+            if (root == null) {
+                JOptionPane.showMessageDialog(this, "Tree is null, not built", "INFO",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         //COMPLETE ME!!!
@@ -136,6 +167,15 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
 
         nodeCounterLabel.setText("Number of Nodes: " + ExpressionTreeBuilder.countNodes(testroot)); //count from root LVR
         drawPanel.repaint();
+    }
+
+    static boolean isNumber(String s)
+    {
+        for (int i = 0; i < s.length(); i++)
+            if (!Character.isDigit(s.charAt(i)))
+                return false;
+
+        return true;
     }
 
     private class DrawPanel extends JPanel {
@@ -153,64 +193,23 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             if (root != null) {
                 drawTree(g, getWidth());
             }
+            else if (rbtroot != null) { //TODO fix this logic this is only tempoaray logic
+                drawTree(g, getWidth());
+            }
 
         }
 
         public void drawTree(Graphics g, int width) {
             if (treeType.equals("Binary Search Tree")){
-                drawBST(g, testroot, BOX_SIZE, 0, 0, new HashMap<>());
+                BinarySearchTree.drawBST(g, testroot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE);
             }
-
+            else if (treeType.equals("Red and Black Tree"))
+            {
+                RedBlackTree.drawRBT(g, rbtroot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE );
+            }
         }
 
-        private int drawBST(Graphics g, BinarySearchTree.Node current,
-                            int x, int level, int nodeCount, Map<BinarySearchTree.Node, Point> map) {
 
-
-            if (current.leftChild != null) {
-                nodeCount = drawBST(g, current.leftChild, x, level + 1, nodeCount, map);
-            }
-
-            int currentX = x + nodeCount * BOX_SIZE;
-            int currentY = level * 2 * BOX_SIZE + BOX_SIZE;
-            nodeCount++;
-            map.put(current, new Point(currentX, currentY));
-
-            if (current.rightChild != null) {
-                nodeCount = drawBST(g, current.rightChild, x, level + 1, nodeCount, map);
-            }
-
-            g.setColor(Color.red);
-            if (current.leftChild != null) {
-                Point leftPoint = map.get(current.leftChild);
-                g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
-            }
-            if (current.rightChild != null) {
-                Point rightPoint = map.get(current.rightChild);
-                g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
-
-            }
-            if (current instanceof BinarySearchTree.Node) {
-                g.setColor(Color.WHITE);
-            } else {
-                g.setColor(Color.YELLOW);
-            }
-
-            Point currentPoint = map.get(current);
-            g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
-            g.setColor(Color.BLACK);
-            g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
-            Font f = new Font("courier new", Font.BOLD, 16);
-            g.setFont(f);
-//            if (current instanceof OperandNode)
-//                g.drawString(current.toString(), currentPoint.x-current.toString().length()*4, currentPoint.y);
-//            else
-//                g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
-            g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
-            return nodeCount;
-
-//            return 1;
-        }
     }
 
     public static void main(String[] args) {

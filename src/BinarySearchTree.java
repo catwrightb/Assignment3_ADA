@@ -6,7 +6,10 @@
  http://www2.hawaii.edu/~walbritt/ics211/treeBinarySearch/BinarySearchTree.java
  */
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 
 public class BinarySearchTree<T extends Comparable<T>> {
@@ -46,10 +49,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
             rightChild = r;
         }
 
+
         @Override
         public String toString()
         {
-            return (String) item;
+            return String.valueOf(item);
         }
     }
 
@@ -221,21 +225,22 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
 
 
+
     /* unit test
      * @param	arguments, ignored
      */
 //    public static void main(String[] arguments) {
-//        BinarySearchTree<String> tree2 = new BinarySearchTree<String>();
-//        tree2.add("cow");
-//        tree2.add("bat");
-//        tree2.add("fly");
-//        tree2.add("ant");
-//        tree2.add("cat");
-//        tree2.add("dog");
+//        BinarySearchTree<Integer> tree2 = new BinarySearchTree<Integer>();
+//        tree2.add(10);
+//        tree2.add(4);
+//        tree2.add(2);
+//        tree2.add(15);
+//        tree2.add(30);
+//
 //
 //        System.out.println(tree2);
 //
-//        tree2.remove("fly");
+//
 //        System.out.println(tree2);
 //
 ////
@@ -519,35 +524,51 @@ public class BinarySearchTree<T extends Comparable<T>> {
             }
         }
 
-//        /* unit test
-//         * @param	arguments, ignored
-//         */
-//        public static void main(String[] arguments) {
-//            BinaryNode<String> x = new BinaryNode<String>("x");
-//            BinaryNode<String> z = new BinaryNode<String>("z");
-//            BinaryNode<String> y = new BinaryNode<String>("y", x, z);
-//            testIterator(new TreeIterator<String>(y));
-//
-//            testIterator(new TreeIterator<String>(y, true));
-//            testIterator(new TreeIterator<String>(y, false));
-//
-//            BinaryNode<String> a = new BinaryNode<String>("a");
-//            BinaryNode<String> c = new BinaryNode<String>("c");
-//            BinaryNode<String> b = new BinaryNode<String>("b", a, null);
-//            BinaryNode<String> m = new BinaryNode<String>("m", b, y);
-//            testIterator(new TreeIterator<String>(m));
-//
-//            testIterator(new TreeIterator<String>(m, true));
-//            testIterator(new TreeIterator<String>(m, false));
-//
-//        }
-//
-//        public static void testIterator(Iterator<String> it) {
-//            System.out.println("it = " + it);
-//            while (it.hasNext()) {
-//                String result = it.next();
-//                System.out.println("it.next gives " + result + "\n it = " + it);
-//            }
-//        }
+    }
+
+
+
+    static int drawBST(Graphics g, BinarySearchTree.Node current,
+                       int x, int level, int nodeCount, Map<Node, Point> map, int BOX_SIZE) {
+
+
+        if (current.leftChild != null) {
+            nodeCount = drawBST(g, current.leftChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        }
+
+        int currentX = x + nodeCount * BOX_SIZE;
+        int currentY = level * 2 * BOX_SIZE + BOX_SIZE;
+        nodeCount++;
+        map.put(current, new Point(currentX, currentY));
+
+        if (current.rightChild != null) {
+            nodeCount = drawBST(g, current.rightChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        }
+
+        g.setColor(Color.red);
+        if (current.leftChild != null) {
+            Point leftPoint = map.get(current.leftChild);
+            g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
+        }
+        if (current.rightChild != null) {
+            Point rightPoint = map.get(current.rightChild);
+            g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
+
+        }
+        if (current instanceof BinarySearchTree.Node) {
+            g.setColor(Color.WHITE);
+        } else {
+            g.setColor(Color.YELLOW);
+        }
+
+        Point currentPoint = map.get(current);
+        g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
+        Font f = new Font("courier new", Font.BOLD, 16);
+        g.setFont(f);
+        g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
+        return nodeCount;
+
     }
 }
