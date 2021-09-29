@@ -7,7 +7,6 @@
  */
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
@@ -17,45 +16,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
     /**
      * A node in a binary tree
      * source https://www2.hawaii.edu/~esb/2011fall.ics211/BinarySearchTree.java.html
-     * @author         Edo Biagioni
-     * @lecture        ICS 211 Mar 15 or later
-     * @date           March 14, 2011
-     * @bugs           private class: include this code within a larger class
      */
 
-    public static class Node<T> {
-        protected T item;
-        public Node<T> leftChild;
-        public Node<T> rightChild;
 
-
-        /**
-         * constructor to build a node with no subtrees
-         */
-        private Node(T value) {
-            item = value;
-            leftChild = null;
-            rightChild = null;
-        }
-
-
-        /**
-         * constructor to build a node with a specified (perhaps null) subtrees
-         *
-         */
-        private Node(T value, Node<T> l, Node<T> r) {
-            item = value;
-            leftChild = l;
-            rightChild = r;
-        }
-
-
-        @Override
-        public String toString()
-        {
-            return String.valueOf(item);
-        }
-    }
 
     /* the root of the tree is the only data field needed */
     protected Node<T> root = null; // null when tree is empty
@@ -105,7 +68,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param	value to be inserted
      */
     public void add(T value) {
-        root = add(value, root);
+        root = insert(value, root);
+        nodeDiscovered(root);
     }
 
     /* add a value to the tree, replacing an existing value if necessary
@@ -113,9 +77,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param	node that is the root of the subtree in which to insert
      * @return	the subtree with the node inserted
      */
-    protected Node<T> add(T value, Node<T> node) {
+    protected Node<T> insert(T value, Node<T> node) {
         if (node == null) {
-            return new Node<T>(value);
+            Node<T> n = new Node<T>(value);
+
+            return n;
         }
         if (value.compareTo(node.item) == 0) {
             // replace the value in this node with a new value
@@ -124,11 +90,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
             //return new BinaryNode<T>(value, node.left, node.right);
         } else {
             if (value.compareTo(node.item) < 0) {	// add to left subtree
-                node.leftChild = add(value, node.leftChild);
+                node.leftChild = insert(value, node.leftChild);
             } else {		// add to right subtree
-                node.rightChild = add(value, node.rightChild);
+                node.rightChild = insert(value, node.rightChild);
             }
+
         }
+
         return node;
     }
 
@@ -223,95 +191,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
         //
     }
 
-
-
-
-    /* unit test
-     * @param	arguments, ignored
-     */
-//    public static void main(String[] arguments) {
-//        BinarySearchTree<Integer> tree2 = new BinarySearchTree<Integer>();
-//        tree2.add(10);
-//        tree2.add(4);
-//        tree2.add(2);
-//        tree2.add(15);
-//        tree2.add(30);
-//
-//
-//        System.out.println(tree2);
-//
-//
-//        System.out.println(tree2);
-//
-////
-////        BinarySearchTree<Integer> tree = new BinarySearchTree<Integer>();
-////
-////        tree.add(5);
-////        tree.add(7);
-////        tree.add(9);
-////        tree.add(3);
-////        tree.add(1);
-////        tree.add(2);
-////        tree.add(4);
-////        tree.add(6);
-////        tree.add(8);
-////        tree.add(10);
-////
-////        System.out.println(tree);
-////
-////        Iterator<Integer> it = tree.preIterator();
-////        System.out.print("pre-order: ");
-////        while (it.hasNext()) {
-////            System.out.print(it.next() + ", ");
-////        }
-////        System.out.println("");
-////
-////        it = tree.iterator();
-////        System.out.print("in-order: ");
-////        while (it.hasNext()) {
-////            System.out.print(it.next() + ", ");
-////        }
-////        System.out.println("");
-////
-////        it = tree.postIterator();
-////        System.out.print("post-order: ");
-////        while (it.hasNext()) {
-////            System.out.print(it.next() + ", ");
-////        }
-////        System.out.println("");
-////
-////        if (! tree.get(5).equals(5)) {
-////            System.out.println("error: tree does not have 5");
-////        }
-////        if (tree.get(13) != null) {
-////            System.out.println("error: tree has 13, should not");
-////        }
-////        if (! tree.get(10).equals(10)) {
-////            System.out.println("error: tree does not have 10");
-////        }
-////
-////        tree.add(10);
-////        System.out.println(tree);
-////
-////        tree.remove(10);
-////        tree.remove(2);
-////        tree.remove(5);
-////        tree.remove(9);
-////        tree.remove(10);
-////        tree.remove(9);
-////        System.out.println(tree);
-////
-////        if (tree.get(5) != null) {
-////            System.out.println("error: tree has 5, should not");
-////        }
-////        if (tree.get(13) != null) {
-////            System.out.println("error: tree has 13, should not");
-////        }
-////        if (! tree.get(3).equals(3)) {
-////            System.out.println("error: tree does not have 3");
-////        }
-//
-//    }
 
 
     /* an iterator class to iterate over binary trees
@@ -528,7 +407,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
 
 
-    static int drawBST(Graphics g, BinarySearchTree.Node current,
+    static int drawBST(Graphics g, Node current,
                        int x, int level, int nodeCount, Map<Node, Point> map, int BOX_SIZE) {
 
 
@@ -555,7 +434,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
             g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
 
         }
-        if (current instanceof BinarySearchTree.Node) {
+        if (current instanceof Node) {
             g.setColor(Color.WHITE);
         } else {
             g.setColor(Color.YELLOW);

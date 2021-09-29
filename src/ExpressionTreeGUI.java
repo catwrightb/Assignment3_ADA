@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * Almost Complete GUI - just need to finish the code when pressing the buttons and updating
- * the number of nodes in the tree.. WIll only build once ExpNode subclasses are made
+ * the number of nodes in the tree.. WIll only build once Archive.ExpNode subclasses are made
  * @author sehall
  */
 public class ExpressionTreeGUI extends JPanel implements ActionListener {
@@ -17,8 +17,8 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
     private final JButton removeNodeButton, addNodeButton;
 
     private DrawPanel drawPanel;
-    private BinarySearchTree.Node root; //root node
-    private BinarySearchTree.Node testroot; //USE THIS root node
+    private Node root; //root node
+    private Node testroot; //USE THIS root node
     private RedBlackNode rbtroot; //USE THIS root node
     private int numberNodes = 0;
     private JTextField addNodeTextField;
@@ -138,14 +138,14 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
                     testroot = test.root;
 
                 } else if (treeType.equals("Red and Black Tree")) {
-                    redBlackTree = new RedBlackTree();
+                    RedBlackTree redBlackTree = new RedBlackTree();
 
                     for (Integer integer : inputItemList) {
                         redBlackTree.insert(integer);
                     }
                     System.out.println(redBlackTree);
                     rbtroot = redBlackTree.getRoot();
-
+//
 
                 } else if (treeType.equals("Persistent")) {
 

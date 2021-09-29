@@ -1,3 +1,5 @@
+import Archive.ExpNode;
+
 public class ExpressionTreeBuilder {
 
     public static ExpNode buildExpressionTree(String[] arr, ExpNode root, int i ){
@@ -19,7 +21,7 @@ public class ExpressionTreeBuilder {
     }
 
 
-    public static void inOrder(BinarySearchTree.Node root)
+    public static void inOrder(Node root)
     {
         if (root != null) {
             inOrder(root.leftChild);
@@ -31,8 +33,8 @@ public class ExpressionTreeBuilder {
 
     //The method countNodes should recursively count the
     // number of nodes down the left and right
-    // subtrees from the parameter ExpNode.
-    public static int countNodes(BinarySearchTree.Node node){
+    // subtrees from the parameter Archive.ExpNode.
+    public static int countNodes(Node node){
         if (node==null)
             return 0;
         else
@@ -46,7 +48,7 @@ public class ExpressionTreeBuilder {
 //    // inFix = a+b or a+b*c
 //    // preFix = +ab or +a*bc
 //    // postfix = ab+ or abc*+
-//    public static String toInfixString(ExpNode node){
+//    public static String toInfixString(Archive.ExpNode node){
 //
 //        if (node == null) {
 //            return "";
