@@ -6,7 +6,9 @@
  http://www2.hawaii.edu/~walbritt/ics211/treeBinarySearch/BinarySearchTree.java
  */
 
+import java.awt.*;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 
 public class BinarySearchTree<T extends Comparable<T>> {
@@ -14,44 +16,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
     /**
      * A node in a binary tree
      * source https://www2.hawaii.edu/~esb/2011fall.ics211/BinarySearchTree.java.html
-     * @author         Edo Biagioni
-     * @lecture        ICS 211 Mar 15 or later
-     * @date           March 14, 2011
-     * @bugs           private class: include this code within a larger class
      */
 
-    public static class Node<T> {
-        protected T item;
-        public Node<T> leftChild;
-        public Node<T> rightChild;
-
-
-        /**
-         * constructor to build a node with no subtrees
-         */
-        private Node(T value) {
-            item = value;
-            leftChild = null;
-            rightChild = null;
-        }
-
-
-        /**
-         * constructor to build a node with a specified (perhaps null) subtrees
-         *
-         */
-        private Node(T value, Node<T> l, Node<T> r) {
-            item = value;
-            leftChild = l;
-            rightChild = r;
-        }
-
-        @Override
-        public String toString()
-        {
-            return (String) item;
-        }
-    }
 
     /* the root of the tree is the only data field needed */
     protected Node<T> root = null; // null when tree is empty
@@ -101,7 +67,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param	value to be inserted
      */
     public void add(T value) {
-        root = add(value, root);
+        root = insert(value, root);
+        //nodeDiscovered(root);
     }
 
     /* add a value to the tree, replacing an existing value if necessary
@@ -109,9 +76,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param	node that is the root of the subtree in which to insert
      * @return	the subtree with the node inserted
      */
-    protected Node<T> add(T value, Node<T> node) {
+    protected Node<T> insert(T value, Node<T> node) {
         if (node == null) {
-            return new Node<T>(value);
+            Node<T> n = new Node<T>(value);
+
+            return n;
         }
         if (value.compareTo(node.item) == 0) {
             // replace the value in this node with a new value
@@ -120,11 +89,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
             //return new BinaryNode<T>(value, node.left, node.right);
         } else {
             if (value.compareTo(node.item) < 0) {	// add to left subtree
-                node.leftChild = add(value, node.leftChild);
+                node.leftChild = insert(value, node.leftChild);
             } else {		// add to right subtree
-                node.rightChild = add(value, node.rightChild);
+                node.rightChild = insert(value, node.rightChild);
             }
+
         }
+
         return node;
     }
 
@@ -210,103 +181,15 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     //hooker methods
-    protected void nodeDiscovered(Node node){
+    protected void addNode(){
         //
     }
 
-    //hooer methods
+    //hooker methods
     protected void nodeFinished(Node node){
         //
     }
 
-
-
-    /* unit test
-     * @param	arguments, ignored
-     */
-//    public static void main(String[] arguments) {
-//        BinarySearchTree<String> tree2 = new BinarySearchTree<String>();
-//        tree2.add("cow");
-//        tree2.add("bat");
-//        tree2.add("fly");
-//        tree2.add("ant");
-//        tree2.add("cat");
-//        tree2.add("dog");
-//
-//        System.out.println(tree2);
-//
-//        tree2.remove("fly");
-//        System.out.println(tree2);
-//
-////
-////        BinarySearchTree<Integer> tree = new BinarySearchTree<Integer>();
-////
-////        tree.add(5);
-////        tree.add(7);
-////        tree.add(9);
-////        tree.add(3);
-////        tree.add(1);
-////        tree.add(2);
-////        tree.add(4);
-////        tree.add(6);
-////        tree.add(8);
-////        tree.add(10);
-////
-////        System.out.println(tree);
-////
-////        Iterator<Integer> it = tree.preIterator();
-////        System.out.print("pre-order: ");
-////        while (it.hasNext()) {
-////            System.out.print(it.next() + ", ");
-////        }
-////        System.out.println("");
-////
-////        it = tree.iterator();
-////        System.out.print("in-order: ");
-////        while (it.hasNext()) {
-////            System.out.print(it.next() + ", ");
-////        }
-////        System.out.println("");
-////
-////        it = tree.postIterator();
-////        System.out.print("post-order: ");
-////        while (it.hasNext()) {
-////            System.out.print(it.next() + ", ");
-////        }
-////        System.out.println("");
-////
-////        if (! tree.get(5).equals(5)) {
-////            System.out.println("error: tree does not have 5");
-////        }
-////        if (tree.get(13) != null) {
-////            System.out.println("error: tree has 13, should not");
-////        }
-////        if (! tree.get(10).equals(10)) {
-////            System.out.println("error: tree does not have 10");
-////        }
-////
-////        tree.add(10);
-////        System.out.println(tree);
-////
-////        tree.remove(10);
-////        tree.remove(2);
-////        tree.remove(5);
-////        tree.remove(9);
-////        tree.remove(10);
-////        tree.remove(9);
-////        System.out.println(tree);
-////
-////        if (tree.get(5) != null) {
-////            System.out.println("error: tree has 5, should not");
-////        }
-////        if (tree.get(13) != null) {
-////            System.out.println("error: tree has 13, should not");
-////        }
-////        if (! tree.get(3).equals(3)) {
-////            System.out.println("error: tree does not have 3");
-////        }
-//
-//    }
 
 
     /* an iterator class to iterate over binary trees
@@ -519,35 +402,51 @@ public class BinarySearchTree<T extends Comparable<T>> {
             }
         }
 
-//        /* unit test
-//         * @param	arguments, ignored
-//         */
-//        public static void main(String[] arguments) {
-//            BinaryNode<String> x = new BinaryNode<String>("x");
-//            BinaryNode<String> z = new BinaryNode<String>("z");
-//            BinaryNode<String> y = new BinaryNode<String>("y", x, z);
-//            testIterator(new TreeIterator<String>(y));
-//
-//            testIterator(new TreeIterator<String>(y, true));
-//            testIterator(new TreeIterator<String>(y, false));
-//
-//            BinaryNode<String> a = new BinaryNode<String>("a");
-//            BinaryNode<String> c = new BinaryNode<String>("c");
-//            BinaryNode<String> b = new BinaryNode<String>("b", a, null);
-//            BinaryNode<String> m = new BinaryNode<String>("m", b, y);
-//            testIterator(new TreeIterator<String>(m));
-//
-//            testIterator(new TreeIterator<String>(m, true));
-//            testIterator(new TreeIterator<String>(m, false));
-//
-//        }
-//
-//        public static void testIterator(Iterator<String> it) {
-//            System.out.println("it = " + it);
-//            while (it.hasNext()) {
-//                String result = it.next();
-//                System.out.println("it.next gives " + result + "\n it = " + it);
-//            }
-//        }
+    }
+
+
+
+    static int drawBST(Graphics g, Node current,
+                       int x, int level, int nodeCount, Map<Node, Point> map, int BOX_SIZE) {
+
+
+        if (current.leftChild != null) {
+            nodeCount = drawBST(g, current.leftChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        }
+
+        int currentX = x + nodeCount * BOX_SIZE;
+        int currentY = level * 2 * BOX_SIZE + BOX_SIZE;
+        nodeCount++;
+        map.put(current, new Point(currentX, currentY));
+
+        if (current.rightChild != null) {
+            nodeCount = drawBST(g, current.rightChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        }
+
+        g.setColor(Color.red);
+        if (current.leftChild != null) {
+            Point leftPoint = map.get(current.leftChild);
+            g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
+        }
+        if (current.rightChild != null) {
+            Point rightPoint = map.get(current.rightChild);
+            g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
+
+        }
+        if (current instanceof Node) {
+            g.setColor(Color.WHITE);
+        } else {
+            g.setColor(Color.YELLOW);
+        }
+
+        Point currentPoint = map.get(current);
+        g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
+        Font f = new Font("courier new", Font.BOLD, 16);
+        g.setFont(f);
+        g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
+        return nodeCount;
+
     }
 }
