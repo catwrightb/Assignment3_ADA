@@ -19,7 +19,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
 
 
-
     /* the root of the tree is the only data field needed */
     protected Node<T> root = null; // null when tree is empty
 
@@ -69,7 +68,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
     public void add(T value) {
         root = insert(value, root);
-        nodeDiscovered(root);
+        //nodeDiscovered(root);
     }
 
     /* add a value to the tree, replacing an existing value if necessary
@@ -182,7 +181,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     //hooker methods
-    protected void nodeDiscovered(Node node){
+    protected void addNode(){
         //
     }
 

@@ -76,6 +76,10 @@ public class RedBlackTree extends BinarySearchTree{
         rblist.add(newNode);
     } //end of bstInsert
 
+
+    /*
+    * get update list
+    * */
     public void traverAgain(RedBlackNode newNode) {
         rblist.clear();
         RedBlackNode curr = root;
@@ -174,6 +178,7 @@ public class RedBlackTree extends BinarySearchTree{
         root.color = "BLACK";
     }//end of fixUp
 
+
     /****************************************************
      * leftRotate
      *
@@ -213,6 +218,7 @@ public class RedBlackTree extends BinarySearchTree{
 //        rblist.add(temp);
         System.out.println("left "+ rblist);
     } //end of left rotate
+
 
     /****************************************************
      * rightRotate
@@ -293,42 +299,10 @@ public class RedBlackTree extends BinarySearchTree{
     } //end of getDepth
 
 
-//    public static class RedBlackNode{
-//        RedBlackNode left;
-//        RedBlackNode right;
-//        RedBlackNode parent;
-//        String color;
-//        int key;
-//
-//        RedBlackNode(RedBlackNode P, RedBlackNode L, RedBlackNode R, String C, int K) {
-//            parent = P;
-//            left = L;
-//            right = R;
-//            color = C;
-//            key = K;
-//        } //end of RedBlackNode
-//
-//        /****************************************************
-//         * getColor
-//         *
-//         * return the actual color value of the node.
-//         ***************************************************/
-//        Color getColor() {
-//            Color toRet = new Color(70, 70, 70);
-//            if (color.equals("RED"))
-//                toRet = new Color(250, 70, 70);
-//            return toRet;
-//        }
-//
-//        @Override
-//        public String toString()
-//        {
-//            return String.valueOf(key);
-//        }
-//    }
+
 
     @Override
-    protected void nodeDiscovered(Node node){
+    protected void addNode(){
         //
     }
 
@@ -357,6 +331,9 @@ public class RedBlackTree extends BinarySearchTree{
     }
 
 
+    /*
+    * draws the Red black tree
+    * */
     static int drawRBT(Graphics g, RedBlackNode current,
                        int x, int level, int nodeCount, Map<RedBlackNode, Point> map, int BOX_SIZE) {
 
@@ -401,38 +378,40 @@ public class RedBlackTree extends BinarySearchTree{
 
     }
 
-    public static void main(String[] args) {
-        RedBlackTree tree = new RedBlackTree();
-//        tree.insert(6);
-//        tree.insert(12);
-//        tree.insert(5);
-//        tree.insert(11);
-//        tree.insert(15);
-//        tree.insert(13);
-//        tree.insert(14);
-//        tree.insert(16);
-
-
+//    public static void main(String[] args) {
+//        RedBlackTree tree = new RedBlackTree();
+//        ////test case 1
+////        tree.insert(6);
+////        tree.insert(12);
+////        tree.insert(5);
+////        tree.insert(11);
+////        tree.insert(15);
+////        tree.insert(13);
+////        tree.insert(14);
+////        tree.insert(16);
+//
+//////testcase 2
 //            tree.insert(10);
 //            tree.insert(8);
 //            tree.insert(13);
 //            tree.insert(6);
 //            tree.insert(7);
-
-
-        tree.insert(10);
-        tree.insert(13);
-        tree.insert(8);
-        tree.insert(6);
-        tree.insert(7);
-        tree.insert(9);
-        tree.insert(11);
-        tree.insert(12);
-        tree.insert(16);
-        tree.insert(18);
-
-        System.out.println(tree.rblist);
-        System.out.println(tree);
-    }
+//
+//
+//        ////test case 3
+////        tree.insert(10);
+////        tree.insert(13);
+////        tree.insert(8);
+////        tree.insert(6);
+////        tree.insert(7);
+////        tree.insert(9);
+////        tree.insert(11);
+////        tree.insert(12);
+////        tree.insert(16);
+////        tree.insert(18);
+//
+//        System.out.println(tree.rblist);
+//        System.out.println(tree);
+//    }
 
 }
