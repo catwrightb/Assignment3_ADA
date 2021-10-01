@@ -301,9 +301,16 @@ public class RedBlackTree extends BinarySearchTree{
 
 
 
+    /**
+     * Hook method to keep track of the tracked path.
+     * Implementation can be overriden by subclasses to
+     * provide different functionalities.
+     *
+     * @param currentNode : Current Node that program is visiting.
+     */
     @Override
-    protected void addNode(){
-        //
+    protected void nodeTraversed(Node currentNode) {
+
     }
 
     @Override

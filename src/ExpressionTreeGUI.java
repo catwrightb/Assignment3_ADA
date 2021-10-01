@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * Almost Complete GUI - just need to finish the code when pressing the buttons and updating
- * the number of nodes in the tree.. WIll only build once Archive.ExpNode subclasses are made
+ * the number of nodes in the tree. WIll only build once Archive.ExpNode subclasses are made
  * @author sehall
  */
 public class ExpressionTreeGUI extends JPanel implements ActionListener {
@@ -36,7 +36,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
         super(new BorderLayout());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
         root = null;
         super.setPreferredSize(new Dimension(PANEL_W, PANEL_H + 30));
         JPanel buttonPanel = new JPanel();
@@ -103,7 +103,6 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             inputItemList.clear();
             root = null;
             drawPanel.repaint();
-
         }
         else if (source == addNodeButton && addNodeTextField.getText() != null && treeType != null) {
 
@@ -220,7 +219,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
         Dimension dimension = toolkit.getScreenSize();
         int screenHeight = dimension.height;
         int screenWidth = dimension.width;
-        frame.pack();             //resize frame apropriately for its content
+        frame.pack();             //resize frame appropriately for its content
         //positions frame in center of screen
         frame.setLocation(new Point((screenWidth / 2) - (frame.getWidth() / 2),
                 (screenHeight / 2) - (frame.getHeight() / 2)));
