@@ -20,6 +20,7 @@ public class RedBlackTree extends BinarySearchTree{
         insert(new RedBlackNode( null, null, "RED", data));
     }
 
+
     /****************************************************
      * insert
      *
