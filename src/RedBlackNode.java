@@ -24,8 +24,8 @@ public class RedBlackNode<T extends Comparable<T>> extends Node<T>{
 
     protected RedBlackNode(T value, RedBlackNode<T> left, RedBlackNode<T> right, Color col) {
         this.item = value;
-        this.leftChild = left;
-        this.rightChild = right;
+        this.left = left;
+        this.right = right;
         this.colour = col;
     }
 
@@ -41,7 +41,7 @@ public class RedBlackNode<T extends Comparable<T>> extends Node<T>{
      */
     public RedBlackNode<T> deepClone(RedBlackNode<T> rbNode) {
         // Deep copies this node and return it to caller.
-        return new RedBlackNode<T>(rbNode.item, (RedBlackNode<T>)rbNode.leftChild,  (RedBlackNode<T>)rbNode.rightChild, rbNode.colour);
+        return new RedBlackNode<T>(rbNode.item, (RedBlackNode<T>)rbNode.left,  (RedBlackNode<T>)rbNode.right, rbNode.colour);
     }
 
     @Override

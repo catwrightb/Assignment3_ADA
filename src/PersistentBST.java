@@ -3,7 +3,6 @@ import java.util.stream.IntStream;
 
 public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> {
     protected List<Node<T>> versionRepository;
-    protected List<BinarySearchTree<T>> treeRepository;
     protected Stack<Node<T>> visitedNodes;
 
     public PersistentBST()
@@ -11,13 +10,11 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
         super();
         this.versionRepository = new ArrayList<>();
         this.versionRepository.add(this.root);
-        this.treeRepository = new ArrayList<>();
-        this.treeRepository.add(new BinarySearchTree<>(this.root));
         this.visitedNodes = new Stack<>();
     }
 
     public int getCurrentVersionNo() {
-        return versionRepository.size() - 1;
+        return (versionRepository.size() == 0 ? 0 : versionRepository.size() - 1);
     }
 
     public Integer[] getVersionNos() {
@@ -35,8 +32,6 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
         this.root = new Node<>(); // old root and children nodes will be garbage collected.
         versionRepository.clear();
         versionRepository.add(this.root);
-        treeRepository.clear();
-        treeRepository.add(new BinarySearchTree<>(this.root));
         visitedNodes.clear();
     }
 
@@ -73,7 +68,6 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
     @Override
     protected void postModification(Node<T> modifiedRoot) {
         this.versionRepository.add(modifiedRoot);
-        this.treeRepository.add(new BinarySearchTree<>(modifiedRoot));
         this.root = modifiedRoot; // Update the current root node.
         this.visitedNodes.clear();
     }

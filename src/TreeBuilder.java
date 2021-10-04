@@ -12,11 +12,11 @@ public class TreeBuilder {
     public static String visualise(Node<?> node) {
         String output = "[";
         if(node != null && node.item != null) {
-            if(node.leftChild != null)
-                output += "" + visualise(node.leftChild);
+            if(node.left != null)
+                output += "" + visualise(node.left);
             output += "" + node.toString();
-            if(node.rightChild != null)
-                output += "" + visualise(node.rightChild);
+            if(node.right != null)
+                output += "" + visualise(node.right);
         }
         output += "]";
         return output;
@@ -32,15 +32,15 @@ public class TreeBuilder {
         if(node == null)
             return 0;
         else
-            return countNodes(node.leftChild) + 1 + countNodes(node.rightChild);
+            return countNodes(node.left) + 1 + countNodes(node.right);
     }
 
     /*
      * draws the Red black tree
      * */
     public static int drawTree(Graphics g, Node<?> current, int x, int level, int nodeCount, Map<Node<?>, Point> map, int BOX_SIZE) {
-        if (current.leftChild != null) {
-            nodeCount = drawTree(g, current.leftChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        if (current.left != null) {
+            nodeCount = drawTree(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
         }
 
         int currentX = x + nodeCount * BOX_SIZE;
@@ -48,18 +48,18 @@ public class TreeBuilder {
         nodeCount++;
         map.put(current, new Point(currentX, currentY));
 
-        if (current.rightChild != null) {
-            nodeCount = drawTree(g, current.rightChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        if (current.right != null) {
+            nodeCount = drawTree(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
         }
 
         g.setColor(Color.RED);
-        if (current.leftChild != null) {
-            Point leftPoint = map.get(current.leftChild);
+        if (current.left != null) {
+            Point leftPoint = map.get(current.left);
             g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
         }
 
-        if (current.rightChild!= null) {
-            Point rightPoint = map.get(current.rightChild);
+        if (current.right != null) {
+            Point rightPoint = map.get(current.right);
             g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
         }
 

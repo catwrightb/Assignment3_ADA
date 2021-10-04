@@ -1,58 +1,71 @@
-/**
- * A regular node in a binary tree. Stores an element and pointers to its left & right children.
- * Type must be of
- * Reference
- * ---------------------------------------------------------------------------------------
- * https://www2.hawaii.edu/~esb/2011fall.ics211/BinarySearchTree.java.html
- */
-public class Node<T extends Comparable<T>> {
-    protected T item;
-    public Node<T> leftChild;
-    public Node<T> rightChild;
+import java.awt.*;
 
+public class Node<T> {
+    protected T item;
+    public Node<T> left;
+    public Node<T> right;
+    public String color;
+
+    /**
+     * constructor to build an empty skeleton node
+     */
     public Node() {
         item = null;
-        leftChild = null;
-        rightChild = null;
+        left = null;
+        right = null;
+        color = null;
     }
 
     /**
-     * Constructor to build a node with no children.
+     * constructor to build a node with no subtrees
      */
     public Node(T value) {
         item = value;
-        leftChild = null;
-        rightChild = null;
+        left = null;
+        right = null;
+        color = null;
     }
 
     /**
-     * Private constructor to build a node with specified children
-     * for the use of cloning nodes.
+     * constructor to build a node with a specified (perhaps null) subtrees
      */
-    protected Node(T value, Node<T> left, Node<T> right) {
+    private Node(T value, Node<T> l, Node<T> r) {
         item = value;
-        leftChild = left;
-        rightChild = right;
+        left = l;
+        right = r;
+        color = null;
     }
 
-    public T getItem() {
-        return this.item;
+    /**
+     * constructor to build an RB node with a specified (perhaps null) subtrees
+     */
+    private Node(T value, Node<T> l, Node<T> r, String col) {
+        item = value;
+        left = l;
+        right = r;
+        color = col;
+    }
+
+    public Color getColor() {
+        Color toRet = new Color(70, 70, 70);
+        if(color.equals("RED"))
+            toRet = new Color(250, 70, 70);
+        return toRet;
     }
 
     /**
      * Method to deep clone a Node object.
+     *
      * @param node Node instance to be copied.
      * @return a new instance of the cloned Node with original links and value
      */
     public Node<T> deepClone(Node<T> node) {
         // Deep copies this node and return it to caller.
-        return new Node<T>(node.item, node.leftChild, node.rightChild);
+        return new Node<>(node.item, node.left, node.right, node.color);
     }
 
     @Override
-    public String toString()
-    {
-        //return super.toString(); // Debugger, prints out the node's memory addresses.
+    public String toString() {
         return String.valueOf(item);
     }
 }

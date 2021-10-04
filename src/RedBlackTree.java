@@ -91,18 +91,18 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             if(newNode.item.compareTo(curr.item) == 0) {
                 return;
             } else if(newNode.item.compareTo(curr.item) < 0) {
-                curr = (RedBlackNode<T>) curr.leftChild;
+                curr = (RedBlackNode<T>) curr.left;
             } else if(newNode.item.compareTo(curr.item) > 0) {
-                curr = (RedBlackNode<T>) curr.rightChild;
+                curr = (RedBlackNode<T>) curr.right;
             }
         }
 
         if(prev == null) {
             //prev = newNode;
         } else if(newNode.item.compareTo(prev.item) < 0) {
-            prev.leftChild = newNode;
+            prev.left = newNode;
         } else if(newNode.item.compareTo(prev.item) > 0) {
-            prev.rightChild = newNode;
+            prev.right = newNode;
         }
         rblist.add(newNode);
     } //end of bstInsert
@@ -121,9 +121,9 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             if(newNode.item.compareTo(curr.item) == 0) {
                 return;
             } else if(newNode.item.compareTo(curr.item) < 0) {
-                curr = (RedBlackNode<T>) curr.leftChild;
+                curr = (RedBlackNode<T>) curr.left;
             } else if(newNode.item.compareTo(curr.item) > 0) {
-                curr = (RedBlackNode<T>) curr.rightChild;
+                curr = (RedBlackNode<T>) curr.right;
             }
         }
     }
@@ -142,8 +142,8 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             //is currParent the left child of its parent?
             //Right side
             RedBlackNode<T> currGrandParent = rblist.get(size - 2);
-            if(currParent == currGrandParent.leftChild) {
-                RedBlackNode<T> currUncle = (RedBlackNode<T>) currGrandParent.rightChild;
+            if(currParent == currGrandParent.left) {
+                RedBlackNode<T> currUncle = (RedBlackNode<T>) currGrandParent.right;
                 //case 1: currUncle is red
                 if(currUncle != null && currUncle.colour.equals(RedBlackNode.RED)) {
                     currParent.colour = RedBlackNode.BLACK;
@@ -154,7 +154,7 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
                     //currParent = curr.parent;
                 } else {
                     //case 2: we are our parent's right child
-                    if(curr == currParent.rightChild) {
+                    if(curr == currParent.right) {
                         curr = currParent;
                         leftRotate(curr, 2);
                         currParent = rblist.get(size - 1);
@@ -169,7 +169,7 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             } else {
                 //currParent is the right child
                 //left side
-                RedBlackNode<T> currUncle = (RedBlackNode<T>) currGrandParent.leftChild;
+                RedBlackNode<T> currUncle = (RedBlackNode<T>) currGrandParent.left;
                 //case 1: currUncle is red
                 if(currUncle != null && currUncle.colour.equals(RedBlackNode.RED)) {
                     currParent.colour = RedBlackNode.BLACK;
@@ -180,7 +180,7 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
                     //currParent = curr.parent;
                 } else {
                     //case 2: we are our parent's right child
-                    if(curr == currParent.leftChild) {
+                    if(curr == currParent.left) {
                         curr = currParent;
                         rightRotate(curr, 2);
                         currParent = rblist.get(size - 1);
@@ -207,19 +207,19 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         int size = rblist.size() - 1;
         RedBlackNode<T> currGrandParent = rblist.get(size - i);
         rblist.clear();
-        RedBlackNode<T> currRight = (RedBlackNode<T>) curr.rightChild;
-        RedBlackNode<T> currRightLC = (RedBlackNode<T>) currRight.leftChild;
+        RedBlackNode<T> currRight = (RedBlackNode<T>) curr.right;
+        RedBlackNode<T> currRightLC = (RedBlackNode<T>) currRight.left;
         RedBlackNode<T> temp = curr;
         //transfer the right node of curr into curr's position
-        if(currGrandParent != null && currGrandParent.leftChild != null && currGrandParent.leftChild == curr) {
-            currGrandParent.leftChild = currRight;
-        } else if(currGrandParent != null && currGrandParent.rightChild != null && currGrandParent.rightChild == curr) {
-            currGrandParent.rightChild = currRight;
+        if(currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
+            currGrandParent.left = currRight;
+        } else if(currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
+            currGrandParent.right = currRight;
         } //end of if
         curr = currRight;
         //fix new curr's children.
-        curr.leftChild = temp;
-        temp.rightChild = currRightLC;
+        curr.left = temp;
+        temp.right = currRightLC;
         //reassign parent pointers.
 //        if (temp.parent == null)
 //            root = curr;
@@ -228,7 +228,7 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 //            curr.parent = currGrandParent;
 //        if (currRightLC != null)
 //            currRightLC.parent = temp;
-        System.out.println(temp.rightChild);
+        System.out.println(temp.right);
         traverAgain(temp);
 //        rblist.add(root);
 //        rblist.add(currGrandParent);
@@ -248,19 +248,19 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         int size = rblist.size() - 1;
         RedBlackNode<T> currGrandParent = rblist.get(size - i); //6
         rblist.clear();
-        RedBlackNode<T> currLeft = (RedBlackNode<T>) curr.leftChild;
-        RedBlackNode<T> currLeftRC = (RedBlackNode<T>) currLeft.rightChild;
+        RedBlackNode<T> currLeft = (RedBlackNode<T>) curr.left;
+        RedBlackNode<T> currLeftRC = (RedBlackNode<T>) currLeft.right;
         RedBlackNode<T> temp = curr;
         //transfer the right node of curr into curr's position
-        if(currGrandParent != null && currGrandParent.leftChild != null && currGrandParent.leftChild == curr) {
-            currGrandParent.leftChild = currLeft;
-        } else if(currGrandParent != null && currGrandParent.rightChild != null && currGrandParent.rightChild == curr) {
-            currGrandParent.rightChild = currLeft;
+        if(currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
+            currGrandParent.left = currLeft;
+        } else if(currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
+            currGrandParent.right = currLeft;
         }
         curr = currLeft;
         //fix new curr's children.
-        curr.rightChild = temp;
-        temp.leftChild = currLeftRC;
+        curr.right = temp;
+        temp.left = currLeftRC;
         //reassign parent pointers.
 //        if (temp.parent == null)
 //            root = curr;
@@ -271,7 +271,7 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 //            currLeftRC.parent = curr;
 
 
-        System.out.println(temp.rightChild);
+        System.out.println(temp.right);
         traverAgain(temp);
         System.out.println("right " + rblist);
     } //end of right rotate
@@ -286,9 +286,9 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             if(key.compareTo(curr.item) == 0) {
                 return curr;
             } else if(key.compareTo(curr.item) < 0) {
-                curr = (RedBlackNode<T>) curr.leftChild;
+                curr = (RedBlackNode<T>) curr.left;
             } else if(key.compareTo(curr.item) > 0) {
-                curr = (RedBlackNode<T>) curr.rightChild;
+                curr = (RedBlackNode<T>) curr.right;
             }
         }
         return null;
@@ -309,8 +309,8 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     private int getDepth(Node<T> node) {
         if(node != null) {
             int right_depth;
-            int left_depth = this.getDepth(node.leftChild);
-            return left_depth > (right_depth = this.getDepth(node.rightChild)) ? left_depth + 1 : right_depth + 1;
+            int left_depth = this.getDepth(node.left);
+            return left_depth > (right_depth = this.getDepth(node.right)) ? left_depth + 1 : right_depth + 1;
         }
         return 0;
     } //end of getDepth
@@ -341,8 +341,8 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         if(node == null || node.item == null) {
             return "";
         }
-        return node.item + "(" + toString(node.leftChild) + ", " +
-                toString(node.rightChild) + ")";
+        return node.item + "(" + toString(node.left) + ", " +
+                toString(node.right) + ")";
     }
 
     @Override

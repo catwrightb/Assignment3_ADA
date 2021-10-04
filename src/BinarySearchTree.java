@@ -31,7 +31,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public Node<T> getRoot() {
-        return root;
+        return this.root;
     }
 
     /**
@@ -46,9 +46,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
             if(key.compareTo(node.item) == 0) {
                 return node;
             } else if(key.compareTo(node.item) < 0) {
-                node = node.leftChild;
+                node = node.left;
             } else {
-                node = node.rightChild;
+                node = node.right;
             }
         }
         return null;
@@ -66,9 +66,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
             if(key.compareTo(node.item) == 0) {
                 return true;
             } else if(key.compareTo(node.item) < 0) {
-                node = node.leftChild;
+                node = node.left;
             } else {
-                node = node.rightChild;
+                node = node.right;
             }
         }
         return false;
@@ -98,16 +98,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
         Node<T> updateNode;
         if(node == null || node.item == null) { // If node is null, or it's field is empty... (base case)
             updateNode = new Node<>(value);
-            nodeTraversed(updateNode);
+//            nodeTraversed(updateNode);
         } else {
             updateNode = preModification(node); // Calls hook method to process node.
-            nodeTraversed(updateNode);
+//            nodeTraversed(updateNode);
             if(value.compareTo(node.item) < 0) {    // Value smaller --> add to left subtree
                 //nodeTraversed(updateNode.leftChild); // Hook method to track paths taken.
-                updateNode.leftChild = insert(value, node.leftChild); // Recursively calls the insert method as it traverses down the subtree.
+                updateNode.left = insert(value, node.left); // Recursively calls the insert method as it traverses down the subtree.
             } else if(value.compareTo(node.item) > 0) {  // Value larger --> add to right subtree
                 //nodeTraversed(updateNode.rightChild); // Hook method to track paths taken.
-                updateNode.rightChild = insert(value, node.rightChild); // Recursively calls the insert method as it traverses down the subtree.
+                updateNode.right = insert(value, node.right); // Recursively calls the insert method as it traverses down the subtree.
             } // Value already exists in tree --> Ignore.
         }
         return updateNode;
@@ -142,24 +142,24 @@ public class BinarySearchTree<T extends Comparable<T>> {
         nodeTraversed(updateNode); // Record path.
 
         if(value.compareTo(node.item) == 0) { // remove this node
-            if(node.leftChild == null) { // replace this node with right child
-                updateNode = node.rightChild;
-            } else if(node.rightChild == null) { // replace with left child
-                updateNode = node.leftChild;
+            if(node.left == null) { // replace this node with right child
+                updateNode = node.right;
+            } else if(node.right == null) { // replace with left child
+                updateNode = node.left;
             } else {    // If there are two children...
                 // Replace the value of the removal node with its predecessor.
-                updateNode.item = getRightmost(node.leftChild);
+                updateNode.item = getRightmost(node.left);
                 //nodeTraversed(updateNode.leftChild); // Record path.
                 // Recursively remove the predecessor node (found in the left subtree of the removal node).
-                updateNode.leftChild = remove(updateNode.item, node.leftChild);
+                updateNode.left = remove(updateNode.item, node.left);
             }
         } else {    // remove from left or right subtree
             if(value.compareTo(node.item) < 0) {   // remove from left subtree
                 //nodeTraversed(updateNode.leftChild); // Record path.
-                updateNode.leftChild = remove(value, node.leftChild);
+                updateNode.left = remove(value, node.left);
             } else if(value.compareTo(node.item) > 0) {  // remove from right subtree
                 //nodeTraversed(updateNode.rightChild); // Record path.
-                updateNode.rightChild = remove(value, node.rightChild);
+                updateNode.right = remove(value, node.right);
             }
         }
         return updateNode;
@@ -175,7 +175,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
     protected T getRightmost(Node<T> node) {
         assert (node != null);
-        Node<T> right = node.rightChild;
+        Node<T> right = node.right;
         if(right == null) {
             return node.item;
         } else {
@@ -206,8 +206,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if(node == null || node.item == null) {
             return "";
         }
-        return node.item + "(" + toString(node.leftChild) + ", " +
-                toString(node.rightChild) + ")";
+        return node.item + "(" + toString(node.left) + ", " +
+                toString(node.right) + ")";
     }
 
     /**
@@ -267,9 +267,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
         // adding the elements to the list collection
         private void traverseInOrder(Node<T> node) {
             if(node != null) {
-                traverseInOrder(node.leftChild);
+                traverseInOrder(node.left);
                 list.add(node.item);
-                traverseInOrder(node.rightChild);
+                traverseInOrder(node.right);
             }
         }
 
@@ -307,8 +307,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     static int drawBST(Graphics g, Node<?> current, int x, int level, int nodeCount, Map<Node<?>, Point> map, int BOX_SIZE) {
 
-        if(current.leftChild != null) {
-            nodeCount = drawBST(g, current.leftChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        if(current.left != null) {
+            nodeCount = drawBST(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
         }
 
         int currentX = x + nodeCount * BOX_SIZE;
@@ -316,17 +316,17 @@ public class BinarySearchTree<T extends Comparable<T>> {
         nodeCount++;
         map.put(current, new Point(currentX, currentY));
 
-        if(current.rightChild != null) {
-            nodeCount = drawBST(g, current.rightChild, x, level + 1, nodeCount, map, BOX_SIZE);
+        if(current.right != null) {
+            nodeCount = drawBST(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
         }
 
         g.setColor(Color.red);
-        if(current.leftChild != null) {
-            Point leftPoint = map.get(current.leftChild);
+        if(current.left != null) {
+            Point leftPoint = map.get(current.left);
             g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
         }
-        if(current.rightChild != null) {
-            Point rightPoint = map.get(current.rightChild);
+        if(current.right != null) {
+            Point rightPoint = map.get(current.right);
             g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
 
         }

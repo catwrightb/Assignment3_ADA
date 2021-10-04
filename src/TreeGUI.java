@@ -35,7 +35,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
 
     protected BinarySearchTree<Integer> binarySearchTree = new BinarySearchTree<>();
     protected PersistentBST<Integer> persistentBST = new PersistentBST<>();
-//    protected RedBlackTree<Integer> redBlackTree = new RedBlackTree<>();
+    protected RedBlackTreeAlt<Integer> redBlackTree = new RedBlackTreeAlt<>();
 
     public TreeGUI() {
         super(new BorderLayout());
