@@ -16,6 +16,14 @@ public class RedBlackNode extends Node{
         key = K;
     } //end of RedBlackNode
 
+    RedBlackNode(int K) {
+        super();
+        //parent = P;
+        key = K;
+
+    } //end of RedBlackNode
+
+
     /****************************************************
      * getColor
      *
