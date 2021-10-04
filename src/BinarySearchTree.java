@@ -85,8 +85,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public void add(T value) {
         //nodeTraversed(root);
         Node<T> moddedRoot = insert(value, root);
-        rotate(value);
         postModification(moddedRoot);
+
     }
 
     /**
@@ -128,7 +128,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public boolean isEmpty() {
-        if (root.item == null){
+        if (root.item == null ){
             return true;
         }
         else {
@@ -261,6 +261,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
     // hooker methods
     protected void rotate(T node) {
         //
+    }
+
+    protected void insertRB(Node<T> newNode) {
+
     }
 
     // Inner class that represents an Iterator for a binary tree

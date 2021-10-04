@@ -138,13 +138,13 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
                     testroot = test.root;
 
                 } else if (treeType.equals("Red and Black Tree")) {
-                    RedBlackTreeAlt redBlackTree = new RedBlackTreeAlt();
-
-                    for (Integer integer : inputItemList) {
-                        //redBlackTree.insertRB(integer);
-                    }
-                    System.out.println(redBlackTree);
-                    root = redBlackTree.getRoot();
+//                    RedBlackTreeAlt redBlackTree = new RedBlackTreeAlt();
+//
+//                    for (Integer integer : inputItemList) {
+//                        //redBlackTree.insertRB(integer);
+//                    }
+//                    System.out.println(redBlackTree);
+//                    root = redBlackTree.getRoot();
 //
 
                 } else if (treeType.equals("Persistent")) {

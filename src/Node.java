@@ -40,6 +40,11 @@ public class Node<T>  {
         color = c;
     }
 
+    public Node(T value, String c) {
+        item = value;
+        color = c;
+    }
+
     Color getColor() {
         Color toRet = new Color(70, 70, 70);
         if (color.equals("RED"))
