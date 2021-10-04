@@ -19,7 +19,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
     private DrawPanel drawPanel;
     private Node root; //root node
     private Node testroot; //USE THIS root node
-    private RedBlackNode rbtroot; //USE THIS root node
+
     private int numberNodes = 0;
     private JTextField addNodeTextField;
     private JTextField removeNodeTextField;
@@ -144,7 +144,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
                         redBlackTree.insertRB(integer);
                     }
                     System.out.println(redBlackTree);
-                    //rbtroot = redBlackTree.r();
+                    root = redBlackTree.getRoot();
 //
 
                 } else if (treeType.equals("Persistent")) {
@@ -193,9 +193,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             if (root != null) {
                 drawTree(g, getWidth());
             }
-            else if (rbtroot != null) { //TODO fix this logic this is only tempoaray logic
-                drawTree(g, getWidth());
-            }
+
 
         }
 
@@ -205,7 +203,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             }
             else if (treeType.equals("Red and Black Tree"))
             {
-                RedBlackTreeAlt.drawRBT(g, rbtroot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE );
+                RedBlackTreeAlt.drawRBT(g, root, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE );
             }
         }
 
