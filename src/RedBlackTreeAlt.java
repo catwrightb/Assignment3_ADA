@@ -439,6 +439,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
                        int x, int level, int nodeCount, Map<Node, Point> map, int BOX_SIZE) {
 
 
+
         if (current.left != null) {
             nodeCount = drawRBT(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
         }
