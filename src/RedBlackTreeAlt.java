@@ -336,6 +336,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     } //end of getDepth
 
 
+
     public Node<T> findPreviousIndex(Node<T> find){
         Node<T> temp = find;
         if (find != root) {
