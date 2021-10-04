@@ -181,8 +181,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     //hooker methods
-    protected void addNode(){
-        //
+    protected void nodeTraversed(Node<T> currentNode) {
     }
 
     //hooker methods

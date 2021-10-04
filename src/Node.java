@@ -1,7 +1,10 @@
+import java.awt.*;
+
 public class Node<T>  {
     protected T item;
     public Node<T> left;
     public Node<T> right;
+    public String color;
 
 
     /**
@@ -11,6 +14,7 @@ public class Node<T>  {
         item = value;
         left = null;
         right = null;
+        color = null;
     }
 
 
@@ -26,6 +30,13 @@ public class Node<T>  {
 
     public Node() {
         item = null;
+    }
+
+    Color getColor() {
+        Color toRet = new Color(70, 70, 70);
+        if (color.equals("RED"))
+            toRet = new Color(250, 70, 70);
+        return toRet;
     }
 
 
