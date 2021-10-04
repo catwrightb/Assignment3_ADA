@@ -30,7 +30,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
     private JComboBox<String> treeTypeDropDown;
     private String treeType;
     private ArrayList<Integer> inputItemList = new ArrayList<>();
-    RedBlackTree redBlackTree;
+    RedBlackTreeAlt redBlackTree;
 
     public ExpressionTreeGUI() {
         super(new BorderLayout());
@@ -138,13 +138,13 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
                     testroot = test.root;
 
                 } else if (treeType.equals("Red and Black Tree")) {
-                    RedBlackTree redBlackTree = new RedBlackTree();
+                    RedBlackTreeAlt redBlackTree = new RedBlackTreeAlt();
 
                     for (Integer integer : inputItemList) {
-                        redBlackTree.insert(integer);
+                        redBlackTree.insertRB(integer);
                     }
                     System.out.println(redBlackTree);
-                    rbtroot = redBlackTree.getRoot();
+                    //rbtroot = redBlackTree.r();
 //
 
                 } else if (treeType.equals("Persistent")) {
@@ -205,7 +205,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
             }
             else if (treeType.equals("Red and Black Tree"))
             {
-                RedBlackTree.drawRBT(g, rbtroot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE );
+                RedBlackTreeAlt.drawRBT(g, rbtroot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE );
             }
         }
 

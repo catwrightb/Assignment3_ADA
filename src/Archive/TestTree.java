@@ -1,53 +1,24 @@
 //import java.awt.*;
 //import java.util.ArrayList;
 //import java.util.Map;
-//import java.util.Stack;
 //
-//public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
+//public class TestTree extends BinarySearchTree {
 //
-//
-//    private RedBlackNode<T> root;
-//    public ArrayList<RedBlackNode> rblist = new ArrayList<RedBlackNode>();
-//    public ArrayList<RedBlackNode> testlist = new ArrayList<RedBlackNode>();
-//    protected ArrayList<RedBlackNode> versionRepository = new ArrayList<>();
-//    protected ArrayList<RedBlackTree> treeRepository = new ArrayList<>();
-//    protected Stack<RedBlackNode> visitedNodes;
+//    private TestNode root;
+//    public ArrayList<TestNode> rblist = new ArrayList<TestNode>();
 //    int numberOfNodes;
-////
-////    public void addToMemory(RedBlackTree oldTree){
-////        RedBlackTree tree = new RedBlackTree();
-////        tree = oldTree;
-////        root = tree.getRoot();
-////        //treeRepository.add(tree);
-////        versionRepository.add(tree.root);
-////
-////    }
 //
-//
-//
-//    public int getCurrentVersionNo() {
-//        return versionRepository.size() - 1;
-//    }
-//
-//    /* Gets a saved version of a tree. */
-//    public RedBlackNode getBranch(int versionNo) {
-//        return versionRepository.get(versionNo);
-//    }
-//
-//    public RedBlackTree() {
+//    public TestTree() {
 //        root = null;
-//
 //    }
-//
-//
 //
 //    /****************************************************
 //     * insert
 //     *
 //     * insert a red node
 //     ***************************************************/
-//    public void insert(T data) {
-//        insert(new RedBlackNode(data));
+//    public void insert(Object data) {
+//        insert(new TestNode(data));
 //    }
 //
 //
@@ -56,19 +27,16 @@
 //     *
 //     * a helper method that inserts the given node
 //     ***************************************************/
-//    public void insert(RedBlackNode newNode) {
+//    public void insert(TestNode newNode) {
 //        if (isEmpty()) {
 //            root = newNode;
-//
 //        } else {
 //            //if it is not empty we must perform two steps:
 //            //Step 1: BST insert to put the node in the correct spot.
-//
 //            bstInsert(newNode);
 //
 //            //Step 2: fixUp
 //            fixUp(newNode);
-//
 //        }
 //        root.color = "BLACK";
 //    } //end of insert
@@ -79,56 +47,49 @@
 //     * A regular binary search tree insert.
 //     * Finds the correct placement off the nodes data and inserts.
 //     ***************************************************/
-//    public void bstInsert(RedBlackNode<T> newNode) {
+//    public <T> void bstInsert(TestNode newNode) {
 //        rblist.clear();
-//        RedBlackNode<T> curr = root;
-//        RedBlackNode<T> prev = null;
-//        //int key = newNode.key; //the node value
-//        T key = newNode.key;
+//        TestNode curr = root;
+//        TestNode prev = null;
+//        Object key =  newNode.item; //the node value
 //        //find the correct position of the node
 //        while (curr != null) {
-//
-//                rblist.add(curr);
-//                prev = curr;
-//                if (key.compareTo(curr.key) < 1)
-//                    curr = curr.left;
-//                else
-//                    curr = curr.right;
-//
-//
+//            rblist.add(curr);
+//            prev = curr;
+//            if (key < curr.item)
+//                curr = (TestNode) curr.left;
+//            else
+//                curr = (TestNode) curr.right;
 //        } //end of while
-//
-//
 //        //insert the node in the correct spot
 //        if (prev == null){
 //            //blank as prev should never be null
 //        }
-//        else if (key.compareTo(prev.key) < 1)
+//        else if (key < prev.item)
 //            prev.left = newNode;
 //        else
 //            prev.right = newNode;
 //
 //        rblist.add(newNode);
-//
 //    } //end of bstInsert
 //
 //
 //    /*
 //    * get update list by only traversing path from root to newNode
 //    * */
-//    public void traverAgain(RedBlackNode<T> newNode) {
+//    public <T> void traverAgain(TestNode<T> newNode) {
 //        rblist.clear();
-//        RedBlackNode<T> curr = root;
-//        RedBlackNode<T> prev = null;
-//        T key = newNode.key; //the node value
+//        TestNode curr = root;
+//        TestNode prev = null;
+//        T key = newNode.item; //the node value
 //        //find the correct position of the node
 //        while (curr != null) {
 //            rblist.add(curr);
 //            prev = curr;
-//            if (key.compareTo(curr.key) < 1)
-//                curr = curr.left;
+//            if (key < curr.item)
+//                curr = (TestNode) curr.left;
 //            else
-//                curr = curr.right;
+//                curr = (TestNode) curr.right;
 //        } //end of while
 //    }
 //
@@ -137,18 +98,18 @@
 //     *
 //     * Corrects the insertion to work for the red black tree.
 //     ***************************************************/
-//    public void fixUp(RedBlackNode curr) {
-//        RedBlackNode rootNode = rblist.get(0);
+//    public void fixUp(TestNode curr) {
+//        TestNode rootNode = rblist.get(0);
 //        int size = rblist.size()-1;
-//        RedBlackNode currParent = findPreviousIndex(curr);
+//        TestNode currParent = findIndexInList(curr);
 //       // System.out.println(currParent);
 //        while (curr != root && !currParent.color.equals("BLACK")) {
 //            //is currParent the left child of its parent?
 //            //Right side
-//            RedBlackNode currGrandParent = findPreviousIndex(currParent);
+//            TestNode currGrandParent = findIndexInList(currParent);
 //
 //            if (currParent == currGrandParent.left) {
-//                RedBlackNode currUncle = currGrandParent.right;
+//                TestNode currUncle = (TestNode) currGrandParent.right;
 //                //case 1: currUncle is red
 //                if (currUncle != null && currUncle.color.equals("RED")) {
 //                    currParent.color = "BLACK";
@@ -158,7 +119,7 @@
 //                    //push curr up to it's grandparent.
 //                    curr = currGrandParent;
 //                    //currParent = curr.parent;
-//                    RedBlackNode greatGrandP = findPreviousIndex(curr);
+//                    TestNode greatGrandP = findIndexInList(curr);
 //                    if (greatGrandP != null){
 //                        currParent = greatGrandP;
 //                    }
@@ -168,12 +129,12 @@
 //                    if (curr == currParent.right) {
 //                        curr = currParent;
 //                        leftRotate(curr, 2);
-//                        currParent = findPreviousIndex(curr);
+//                        currParent = findIndexInList(curr);
 //                        //currParent = curr;
 //                    }
 //                    //case 3: our sibling is a black node and we are red
 //                    currParent.color = "BLACK";
-//                    currGrandParent = findPreviousIndex(currParent);
+//                    currGrandParent = findIndexInList(currParent);
 //                    currGrandParent.color = "RED";
 //                    if (currGrandParent == root){
 //                        rightRotate(currGrandParent, 2);
@@ -186,7 +147,7 @@
 //            } else {
 //                //currParent is the right child
 //                //left side
-//                RedBlackNode currUncle = currGrandParent.left;
+//                TestNode currUncle = (TestNode) currGrandParent.left;
 //                //case 1: currUncle is red
 //                if (currUncle != null && currUncle.color.equals("RED")) {
 //                    currParent.color = "BLACK";
@@ -197,7 +158,7 @@
 //                    //curr = currParent.parent;
 //                    curr = currGrandParent;
 //                    //currParent = curr.parent;
-//                    RedBlackNode greatGrandP = findPreviousIndex(curr);
+//                    TestNode greatGrandP = findIndexInList(curr);
 //                    if (greatGrandP != null){
 //                        currParent = greatGrandP;
 //                    }
@@ -207,11 +168,11 @@
 //                    if (curr == currParent.left) {
 //                        curr = currParent;
 //                        rightRotate(curr, 2);
-//                        currParent = findPreviousIndex(curr);
+//                        currParent = findIndexInList(curr);
 //                    }
 //                    //case 3: our sibling is a black node and we are red
 //                    currParent.color = "BLACK";
-//                    currGrandParent = findPreviousIndex(currParent);
+//                    currGrandParent = findIndexInList(currParent);
 //                    currGrandParent.color = "RED";
 //                    if (currGrandParent == root){
 //                        leftRotate(currGrandParent, 2);
@@ -232,14 +193,14 @@
 //     *
 //     * perform a left rotation on the tree
 //     ***************************************************/
-//    public void leftRotate(RedBlackNode curr, int i) {
+//    public void leftRotate(TestNode curr, int i) {
 //        //set up the variables
 //        int size = rblist.size()-1;
-//        RedBlackNode currGrandParent = findPreviousIndex(curr);
+//        TestNode currGrandParent = findIndexInList(curr);
 //        rblist.clear();
-//        RedBlackNode currRight = curr.right;
-//        RedBlackNode currRightLC = currRight.left;
-//        RedBlackNode temp = curr;
+//        TestNode currRight = (TestNode) curr.right;
+//        TestNode currRightLC = (TestNode) currRight.left;
+//        TestNode temp = curr;
 //        //transfer the right node of curr into curr's position
 //        if (currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
 //            currGrandParent.left = currRight;
@@ -256,8 +217,10 @@
 //            root = curr;
 //        }
 //
+//        System.out.println(temp.right);
 //        traverAgain(temp);
 //
+//        System.out.println("left "+ rblist);
 //    } //end of left rotate
 //
 //
@@ -266,14 +229,14 @@
 //     *
 //     * perform a right rotation on the tree
 //     ***************************************************/
-//    public void rightRotate(RedBlackNode curr, int i) {
+//    public void rightRotate(TestNode curr, int i) {
 //        //set up the variables
 //        int size = rblist.size()-1;
-//        RedBlackNode currGrandParent = findPreviousIndex(curr); //6
+//        TestNode currGrandParent = findIndexInList(curr); //6
 //        rblist.clear();
-//        RedBlackNode currLeft = curr.left;
-//        RedBlackNode currLeftRC = currLeft.right;
-//        RedBlackNode temp = curr;
+//        TestNode currLeft = (TestNode) curr.left;
+//        TestNode currLeftRC = (TestNode) currLeft.right;
+//        TestNode temp = curr;
 //        //transfer the right node of curr into curr's position
 //        if (currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
 //            currGrandParent.left = currLeft;
@@ -291,22 +254,18 @@
 //        }
 //        //reassign parent pointers.
 //
+//        System.out.println(temp.right);
 //        traverAgain(temp);
-//
+//        System.out.println("right "+rblist);
 //    } //end of right rotate
 //
 //    public boolean isEmpty() {
 //        return root == null;
 //    } //end of isEmpty
 //
-//    public void setRoot(RedBlackNode root) {
-//        resetTree();
-//        this.root = root;
-//    }
-//
-////    public RedBlackNode search(int key) {
-////        RedBlackNode curr = root;
-////        RedBlackNode toRet = null;
+////    public TestNode search(int key) {
+////        TestNode curr = root;
+////        TestNode toRet = null;
 ////        while (curr != null && curr.key != key) {
 ////            if (curr.key < key) {
 ////                curr = curr.right;
@@ -318,10 +277,10 @@
 ////            toRet = curr;
 ////        return toRet;
 ////    } //end of search
-////
-////    public RedBlackNode getRoot() {
-////        return root;
-////    }//end of getRoot
+//
+//    public TestNode getRoot() {
+//        return root;
+//    }//end of getRoot
 //
 //    public void resetTree() {
 //        root = null;
@@ -331,18 +290,17 @@
 //        return this.getDepth(this.root);
 //    } //end of getDepth
 //
-//    private int getDepth(RedBlackNode node) {
+//    private int getDepth(TestNode node) {
 //        if (node != null) {
 //            int right_depth;
-//            int left_depth = this.getDepth(node.left);
-//            return left_depth > (right_depth = this.getDepth(node.right)) ? left_depth + 1 : right_depth + 1;
+//            int left_depth = this.getDepth((TestNode) node.left);
+//            return left_depth > (right_depth = this.getDepth((TestNode) node.right)) ? left_depth + 1 : right_depth + 1;
 //        }
 //        return 0;
 //    } //end of getDepth
 //
-//
-//    public RedBlackNode findPreviousIndex(RedBlackNode find){
-//        RedBlackNode temp = find;
+//    public TestNode findIndexInList(TestNode find){
+//        TestNode temp = find;
 //        if (find != root) {
 //
 //            int position = -1;
@@ -350,6 +308,7 @@
 //            for (int i = 0; i < rblist.size(); i++) {
 //                if (find == rblist.get(i)) {
 //                    position = i;
+////                temp = rblist.get(i);
 //                }
 //            }
 //
@@ -360,6 +319,13 @@
 //
 //
 //
+//
+//
+//
+//    @Override
+//    protected void addNode(){
+//        //
+//    }
 //
 //    @Override
 //    protected void nodeFinished(Node node){
@@ -373,66 +339,28 @@
 //        return toString(root);
 //    }
 //
-//    protected String toString(RedBlackNode<T> node) {
+//    protected String toString(TestNode node) {
 //        if (node == null) {
 //            return "";
 //        }
-//        return toString(node.item) + " (" + toString(node.left) + ", " +
+//        return toString((Node) node.item) + " (" + toString(node.left) + ", " +
 //                toString(node.right) + ") ";
 //    }
 //
-//
-//
-//    private String toString(T key) {
+//    private String toString(int key) {
 //        return String.valueOf(key);
 //    }
 //
-//
-//    /*
-//    * Remove methods
-//    *
-//    * */
-//    public void remove(T find){
-//        RedBlackTree tree2 = new RedBlackTree();
-//        this.addToList();
-//
-//        for (RedBlackNode redBlackNode : testlist) {
-//
-//            if (find != redBlackNode.key) {
-//                tree2.insert(redBlackNode.key);
-//            }
-//        }
-//
-//        this.setRoot(tree2.root);
-//
-//    }
-//
-//    public void addToList() {
-//        addToList(root);
-//    }
-//
-//    protected String addToList(RedBlackNode<T> node) {
-//        if (node == null) {
-//            return "";
-//        }
-//        return addToList(node.key) + " (" + addToList(node.left) + ", " +
-//                addToList(node.right) + ") ";
-//    }
-//
-//    private String addToList(T key) {
-//        testlist.add(new RedBlackNode(key));
-//        return String.valueOf(key);
-//    }
 //
 //    /*
 //    * draws the Red black tree
 //    * */
-//    static int drawRBT(Graphics g, RedBlackNode current,
-//                       int x, int level, int nodeCount, Map<RedBlackNode, Point> map, int BOX_SIZE) {
+//    static int drawRBT(Graphics g, TestNode current,
+//                       int x, int level, int nodeCount, Map<TestNode, Point> map, int BOX_SIZE) {
 //
 //
 //        if (current.left != null) {
-//            nodeCount = drawRBT(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
+//            nodeCount = drawRBT(g, (TestNode) current.left, x, level + 1, nodeCount, map, BOX_SIZE);
 //        }
 //
 //        int currentX = x + nodeCount * BOX_SIZE;
@@ -441,7 +369,7 @@
 //        map.put(current, new Point(currentX, currentY));
 //
 //        if (current.right != null) {
-//            nodeCount = drawRBT(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
+//            nodeCount = drawRBT(g, (TestNode) current.right, x, level + 1, nodeCount, map, BOX_SIZE);
 //        }
 //
 //        g.setColor(current.getColor());
@@ -454,6 +382,11 @@
 //            g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
 //
 //        }
+////        if (current instanceof TestNode) {
+////            g.setColor(Color.WHITE);
+////        } else {
+////            g.setColor(Color.YELLOW);
+////        }
 //
 //        Point currentPoint = map.get(current);
 //        g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
@@ -466,78 +399,68 @@
 //
 //    }
 //
-//    public static void main(String[] args) {
-//        RedBlackTree tree = new RedBlackTree();
-//
-////TESTCASE
-//        tree.insert(10);
-//
-//        tree.insert(5);
-//
-//        tree.insert(1);
-//
-//        tree.insert(4);
-//        tree.insert(6);
-//        tree.insert(8);
-//        tree.insert(20);
-//        tree.insert(30);
-//       // tree.insert(40);
-//
-//
-////Test case
-////        tree.insert(20);
-////        tree.insert(10);
-////        tree.insert(30);
-////        tree.insert(5);
-////        tree.insert(4);
-////        tree.insert(3);
-////        tree.insert(2);
-////        tree.insert(1);
-////        tree.insert(40);
-////        tree.insert(50);
-////        tree.insert(60);
-////        tree.insert(70);
-////        tree.insert(80);
-//
-//
-//        ////test case 1
-////        tree.insert(6);
-////        tree.insert(12);
-////        tree.insert(5);
-////        tree.insert(11);
-////        tree.insert(15);
-////        tree.insert(13);
-////        tree.insert(14);
-////        tree.insert(16);
-//
-//////testcase 2
-////            tree.insert(10);
-////            tree.insert(8);
-////            tree.insert(13);
-////            tree.insert(6);
-////            tree.insert(7);
-//
-//
-//        ////test case 3
-////        tree.insert(10);
-////        tree.insert(13);
-////        tree.insert(8);
-////        tree.insert(6);
-////        tree.insert(7);
-////        tree.insert(9);
-////        tree.insert(11);
-////        tree.insert(12);
-////        tree.insert(16);
-////        tree.insert(18);
-//
-//
-//
-//        //tree.remove(8);
-//        System.out.println("ORIGINAL TREE : " +tree);
-//        tree.insert(40);
-//        System.out.println("ORIGINAL TREE : " +tree);
-//
-//
-//    }
+////    public static void main(String[] args) {
+////        RedBlackTree tree = new RedBlackTree();
+////
+//////TESTCASE
+//////        tree.insert(10);
+//////        tree.insert(5);
+//////        tree.insert(1);
+//////        tree.insert(4);
+//////        tree.insert(6);
+//////        tree.insert(8);
+//////        tree.insert(20);
+//////        tree.insert(30);
+//////        tree.insert(40);
+////
+//////Test case
+//////        tree.insert(20);
+//////        tree.insert(10);
+//////        tree.insert(30);
+//////        tree.insert(5);
+//////        tree.insert(4);
+//////        tree.insert(3);
+//////        tree.insert(2);
+//////        tree.insert(1);
+//////        tree.insert(40);
+//////        tree.insert(50);
+//////        tree.insert(60);
+//////        tree.insert(70);
+//////        tree.insert(80);
+////
+////
+////        ////test case 1
+//////        tree.insert(6);
+//////        tree.insert(12);
+//////        tree.insert(5);
+//////        tree.insert(11);
+//////        tree.insert(15);
+//////        tree.insert(13);
+//////        tree.insert(14);
+//////        tree.insert(16);
+////
+////////testcase 2
+//////            tree.insert(10);
+//////            tree.insert(8);
+//////            tree.insert(13);
+//////            tree.insert(6);
+//////            tree.insert(7);
+////
+////
+////        ////test case 3
+//////        tree.insert(10);
+//////        tree.insert(13);
+//////        tree.insert(8);
+//////        tree.insert(6);
+//////        tree.insert(7);
+//////        tree.insert(9);
+//////        tree.insert(11);
+//////        tree.insert(12);
+//////        tree.insert(16);
+//////        tree.insert(18);
+////
+////        System.out.println(tree.rblist);
+////        System.out.println(tree);
+////    }
 //
 //}
