@@ -1,25 +1,18 @@
 import java.awt.*;
 
-public class RedBlackNode extends Node{
+public class RedBlackNode<T extends Comparable<T>> extends Node<T>{
     RedBlackNode left;
     RedBlackNode right;
     //RedBlackNode parent;
     String color;
-    int key;
+    T key;
 
-    RedBlackNode( RedBlackNode L, RedBlackNode R, String C, int K) {
-        super();
-        //parent = P;
-        left = L;
-        right = R;
-        color = C;
-        key = K;
-    } //end of RedBlackNode
 
-    RedBlackNode(int K) {
-        super();
+    RedBlackNode(T K) {
+        super(K);
         //parent = P;
         key = K;
+        color = "RED";
 
     } //end of RedBlackNode
 

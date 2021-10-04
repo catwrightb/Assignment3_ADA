@@ -144,7 +144,7 @@ public class ExpressionTreeGUI extends JPanel implements ActionListener {
                         redBlackTree.insert(integer);
                     }
                     System.out.println(redBlackTree);
-                    rbtroot = redBlackTree.getRoot();
+                    //rbtroot = redBlackTree.r();
 //
 
                 } else if (treeType.equals("Persistent")) {

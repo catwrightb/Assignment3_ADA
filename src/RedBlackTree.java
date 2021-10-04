@@ -1,16 +1,42 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Stack;
 
-public class RedBlackTree extends BinarySearchTree{
+public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 
-    private RedBlackNode root;
+
+    private RedBlackNode<T> root;
     public ArrayList<RedBlackNode> rblist = new ArrayList<RedBlackNode>();
     public ArrayList<RedBlackNode> testlist = new ArrayList<RedBlackNode>();
+    protected ArrayList<RedBlackNode> versionRepository = new ArrayList<>();
+    protected ArrayList<RedBlackTree> treeRepository = new ArrayList<>();
+    protected Stack<RedBlackNode> visitedNodes;
     int numberOfNodes;
+//
+//    public void addToMemory(RedBlackTree oldTree){
+//        RedBlackTree tree = new RedBlackTree();
+//        tree = oldTree;
+//        root = tree.getRoot();
+//        //treeRepository.add(tree);
+//        versionRepository.add(tree.root);
+//
+//    }
+
+
+
+    public int getCurrentVersionNo() {
+        return versionRepository.size() - 1;
+    }
+
+    /* Gets a saved version of a tree. */
+    public RedBlackNode getBranch(int versionNo) {
+        return versionRepository.get(versionNo);
+    }
 
     public RedBlackTree() {
         root = null;
+
     }
 
 
@@ -20,8 +46,8 @@ public class RedBlackTree extends BinarySearchTree{
      *
      * insert a red node
      ***************************************************/
-    public void insert(Integer data) {
-        insert(new RedBlackNode( null, null, "RED", data));
+    public void insert(T data) {
+        insert(new RedBlackNode(data));
     }
 
 
@@ -33,13 +59,16 @@ public class RedBlackTree extends BinarySearchTree{
     public void insert(RedBlackNode newNode) {
         if (isEmpty()) {
             root = newNode;
+
         } else {
             //if it is not empty we must perform two steps:
             //Step 1: BST insert to put the node in the correct spot.
+
             bstInsert(newNode);
 
             //Step 2: fixUp
             fixUp(newNode);
+
         }
         root.color = "BLACK";
     } //end of insert
@@ -50,28 +79,31 @@ public class RedBlackTree extends BinarySearchTree{
      * A regular binary search tree insert.
      * Finds the correct placement off the nodes data and inserts.
      ***************************************************/
-    public void bstInsert(RedBlackNode newNode) {
+    public void bstInsert(RedBlackNode<T> newNode) {
         rblist.clear();
-        RedBlackNode curr = root;
-        RedBlackNode prev = null;
-        int key = newNode.key; //the node value
+        RedBlackNode<T> curr = root;
+        RedBlackNode<T> prev = null;
+        //int key = newNode.key; //the node value
+        T key = newNode.key;
         //find the correct position of the node
         while (curr != null) {
 
                 rblist.add(curr);
                 prev = curr;
-                if (key < curr.key)
+                if (key.compareTo(curr.key) < 1)
                     curr = curr.left;
                 else
                     curr = curr.right;
 
 
         } //end of while
+
+
         //insert the node in the correct spot
         if (prev == null){
             //blank as prev should never be null
         }
-        else if (key < prev.key)
+        else if (key.compareTo(prev.key) < 1)
             prev.left = newNode;
         else
             prev.right = newNode;
@@ -84,16 +116,16 @@ public class RedBlackTree extends BinarySearchTree{
     /*
     * get update list by only traversing path from root to newNode
     * */
-    public void traverAgain(RedBlackNode newNode) {
+    public void traverAgain(RedBlackNode<T> newNode) {
         rblist.clear();
-        RedBlackNode curr = root;
-        RedBlackNode prev = null;
-        int key = newNode.key; //the node value
+        RedBlackNode<T> curr = root;
+        RedBlackNode<T> prev = null;
+        T key = newNode.key; //the node value
         //find the correct position of the node
         while (curr != null) {
             rblist.add(curr);
             prev = curr;
-            if (key < curr.key)
+            if (key.compareTo(curr.key) < 1)
                 curr = curr.left;
             else
                 curr = curr.right;
@@ -272,24 +304,24 @@ public class RedBlackTree extends BinarySearchTree{
         this.root = root;
     }
 
-    public RedBlackNode search(int key) {
-        RedBlackNode curr = root;
-        RedBlackNode toRet = null;
-        while (curr != null && curr.key != key) {
-            if (curr.key < key) {
-                curr = curr.right;
-            } else {
-                curr = curr.left;
-            } //end of if-else
-        } //end of while
-        if (curr != null && curr.key == key)
-            toRet = curr;
-        return toRet;
-    } //end of search
-
-    public RedBlackNode getRoot() {
-        return root;
-    }//end of getRoot
+//    public RedBlackNode search(int key) {
+//        RedBlackNode curr = root;
+//        RedBlackNode toRet = null;
+//        while (curr != null && curr.key != key) {
+//            if (curr.key < key) {
+//                curr = curr.right;
+//            } else {
+//                curr = curr.left;
+//            } //end of if-else
+//        } //end of while
+//        if (curr != null && curr.key == key)
+//            toRet = curr;
+//        return toRet;
+//    } //end of search
+//
+//    public RedBlackNode getRoot() {
+//        return root;
+//    }//end of getRoot
 
     public void resetTree() {
         root = null;
@@ -344,17 +376,17 @@ public class RedBlackTree extends BinarySearchTree{
         return toString(root);
     }
 
-    protected String toString(RedBlackNode node) {
+    protected String toString(RedBlackNode<T> node) {
         if (node == null) {
             return "";
         }
-        return toString(node.key) + " (" + toString(node.left) + ", " +
+        return toString(node.item) + " (" + toString(node.left) + ", " +
                 toString(node.right) + ") ";
     }
 
 
 
-    private String toString(int key) {
+    private String toString(T key) {
         return String.valueOf(key);
     }
 
@@ -363,7 +395,7 @@ public class RedBlackTree extends BinarySearchTree{
     * Remove methods
     *
     * */
-    public void remove(int find){
+    public void remove(T find){
         RedBlackTree tree2 = new RedBlackTree();
         this.addToList();
 
@@ -374,7 +406,7 @@ public class RedBlackTree extends BinarySearchTree{
             }
         }
 
-        this.setRoot(tree2.getRoot());
+        this.setRoot(tree2.root);
 
     }
 
@@ -382,7 +414,7 @@ public class RedBlackTree extends BinarySearchTree{
         addToList(root);
     }
 
-    protected String addToList(RedBlackNode node) {
+    protected String addToList(RedBlackNode<T> node) {
         if (node == null) {
             return "";
         }
@@ -390,7 +422,7 @@ public class RedBlackTree extends BinarySearchTree{
                 addToList(node.right) + ") ";
     }
 
-    private String addToList(int key) {
+    private String addToList(T key) {
         testlist.add(new RedBlackNode(key));
         return String.valueOf(key);
     }
@@ -437,73 +469,78 @@ public class RedBlackTree extends BinarySearchTree{
 
     }
 
-//    public static void main(String[] args) {
-//        RedBlackTree tree = new RedBlackTree();
-//
-////TESTCASE
-//        tree.insert(10);
-//        tree.insert(5);
-//        tree.insert(1);
-//        tree.insert(4);
-//        tree.insert(6);
-//        tree.insert(8);
+    public static void main(String[] args) {
+        RedBlackTree tree = new RedBlackTree();
+
+//TESTCASE
+        tree.insert(10);
+
+        tree.insert(5);
+
+        tree.insert(1);
+
+        tree.insert(4);
+        tree.insert(6);
+        tree.insert(8);
+        tree.insert(20);
+        tree.insert(30);
+       // tree.insert(40);
+
+
+//Test case
 //        tree.insert(20);
+//        tree.insert(10);
 //        tree.insert(30);
+//        tree.insert(5);
+//        tree.insert(4);
+//        tree.insert(3);
+//        tree.insert(2);
+//        tree.insert(1);
 //        tree.insert(40);
-//
-//
-////Test case
-////        tree.insert(20);
-////        tree.insert(10);
-////        tree.insert(30);
-////        tree.insert(5);
-////        tree.insert(4);
-////        tree.insert(3);
-////        tree.insert(2);
-////        tree.insert(1);
-////        tree.insert(40);
-////        tree.insert(50);
-////        tree.insert(60);
-////        tree.insert(70);
-////        tree.insert(80);
-//
-//
-//        ////test case 1
-////        tree.insert(6);
-////        tree.insert(12);
-////        tree.insert(5);
-////        tree.insert(11);
-////        tree.insert(15);
-////        tree.insert(13);
-////        tree.insert(14);
-////        tree.insert(16);
-//
-//////testcase 2
-////            tree.insert(10);
-////            tree.insert(8);
-////            tree.insert(13);
-////            tree.insert(6);
-////            tree.insert(7);
-//
-//
-//        ////test case 3
-////        tree.insert(10);
-////        tree.insert(13);
-////        tree.insert(8);
-////        tree.insert(6);
-////        tree.insert(7);
-////        tree.insert(9);
-////        tree.insert(11);
-////        tree.insert(12);
-////        tree.insert(16);
-////        tree.insert(18);
-//
-//
-//
-//        tree.remove(8);
-//        System.out.println("ORIGINAL TREE : " +tree);
-//
-//
-//    }
+//        tree.insert(50);
+//        tree.insert(60);
+//        tree.insert(70);
+//        tree.insert(80);
+
+
+        ////test case 1
+//        tree.insert(6);
+//        tree.insert(12);
+//        tree.insert(5);
+//        tree.insert(11);
+//        tree.insert(15);
+//        tree.insert(13);
+//        tree.insert(14);
+//        tree.insert(16);
+
+////testcase 2
+//            tree.insert(10);
+//            tree.insert(8);
+//            tree.insert(13);
+//            tree.insert(6);
+//            tree.insert(7);
+
+
+        ////test case 3
+//        tree.insert(10);
+//        tree.insert(13);
+//        tree.insert(8);
+//        tree.insert(6);
+//        tree.insert(7);
+//        tree.insert(9);
+//        tree.insert(11);
+//        tree.insert(12);
+//        tree.insert(16);
+//        tree.insert(18);
+
+
+
+        //tree.remove(8);
+        System.out.println("ORIGINAL TREE : " +tree);
+        tree.insert(40);
+        System.out.println("ORIGINAL TREE : " +tree);
+
+
+    }
 
 }
