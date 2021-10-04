@@ -6,22 +6,11 @@ import java.util.Stack;
 public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T> {
 
 
-    protected Node<T> root;
     public ArrayList<Node<T>> rblist = new ArrayList<Node<T>>();
     public ArrayList<Node<T>> testlist = new ArrayList<Node<T>>();
     protected ArrayList<Node<T>> versionRepository = new ArrayList<>();
     protected ArrayList<Node<T>> treeRepository = new ArrayList<>();
     protected Stack<Node<T>> visitedNodes;
-    int numberOfNodes;
-//
-//    public void addToMemory(RedBlackTree oldTree){
-//        RedBlackTree tree = new RedBlackTree();
-//        tree = oldTree;
-//        root = tree.getRoot();
-//        //treeRepository.add(tree);
-//        versionRepository.add(tree.root);
-//
-//    }
 
 
 
@@ -66,7 +55,6 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         } else {
             //if it is not empty we must perform two steps:
             //Step 1: BST insert to put the node in the correct spot.
-
             bstInsert(newNode);
 
             //Step 2: fixUp
@@ -371,10 +359,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         currentNode.color = "RED";
     }
 
-    @Override
-    protected void nodeFinished(Node node){
-        //
-    }
+
 
     /* toString
      * @returns	the string representation of the tree.
@@ -480,11 +465,8 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 //TESTCASE
         tree.insertRB(10);
-
         tree.insertRB(5);
-
         tree.insertRB(1);
-
         tree.insertRB(4);
         tree.insertRB(6);
         tree.insertRB(8);
