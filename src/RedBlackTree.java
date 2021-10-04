@@ -1,33 +1,37 @@
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 
     private RedBlackNode<T> root;
     protected List<RedBlackNode<T>> versionRepository;
-    protected List<BinarySearchTree<T>> treeRepository;
-    protected Stack<RedBlackNode<T>> visitedNodes;
+    //    protected List<BinarySearchTree<T>> treeRepository;
+//    protected Stack<RedBlackNode<T>> visitedNodes;
     public ArrayList<RedBlackNode<T>> rblist = new ArrayList<>();
 
-    public RedBlackTree()
-    {
-        this.root = new RedBlackNode<>();
-        this.versionRepository = new ArrayList<>();
-        this.versionRepository.add(this.root);
-        this.treeRepository = new ArrayList<>();
-        this.treeRepository.add(new BinarySearchTree<>(this.root));
-        this.visitedNodes = new Stack<>();
+    public RedBlackTree() {
+        root = null;
     }
+
+//    public RedBlackTree() {
+//        this.root = new RedBlackNode<>();
+//        this.versionRepository = new ArrayList<>();
+//        this.versionRepository.add(this.root);
+////        this.treeRepository = new ArrayList<>();
+////        this.treeRepository.add(new BinarySearchTree<>(this.root));
+//        this.visitedNodes = new Stack<>();
+//    }
 
     public int getCurrentVersionNo() {
         return versionRepository.size() - 1;
     }
 
+    public Integer[] getVersionNos() {
+        return IntStream.rangeClosed(0, this.getCurrentVersionNo()).boxed().toArray(Integer[]::new);
+    }
+
     /* Gets a saved version of a tree. */
-    public Node<T> getBranch(int versionNo) {
+    public RedBlackNode<T> getBranch(int versionNo) {
         return versionRepository.get(versionNo);
     }
 
@@ -37,9 +41,9 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         this.root = new RedBlackNode<>(); // old root and children nodes will be garbage collected.
         versionRepository.clear();
         versionRepository.add(this.root);
-        treeRepository.clear();
-        treeRepository.add(new BinarySearchTree<>(this.root));
-        visitedNodes.clear();
+//        treeRepository.clear();
+//        treeRepository.add(new BinarySearchTree<>(this.root));
+//        visitedNodes.clear();
     }
 
     /****************************************************
@@ -48,7 +52,8 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      * insert a red node
      ***************************************************/
     public void add(T data) {
-        insert(new RedBlackNode( null, null, "RED", data));
+        //insert(new RedBlackNode<>( null, null, "RED", data));
+        insert(new RedBlackNode<>(data));
     }
 
     /****************************************************
@@ -56,8 +61,8 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      *
      * a helper method that inserts the given node
      ***************************************************/
-    public void insert(RedBlackNode newNode) {
-        if (isEmpty()) {
+    public void insert(RedBlackNode<T> newNode) {
+        if(isEmpty() || root.item == null) {
             root = newNode;
         } else {
             //if it is not empty we must perform two steps:
@@ -67,7 +72,7 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
             //Step 2: fixUp
             fixUp(newNode);
         }
-        root.colour = "BLACK";
+        root.colour = RedBlackNode.BLACK;
     } //end of insert
 
     /****************************************************
@@ -76,69 +81,51 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      * A regular binary search tree insert.
      * Finds the correct placement off the nodes data and inserts.
      ***************************************************/
-    public void bstInsert(RedBlackNode newNode) {
+    public void bstInsert(RedBlackNode<T> newNode) {
         rblist.clear();
-        RedBlackNode curr = root;
-        RedBlackNode prev = null;
-        int key = newNode.key; //the node value
-        //find the correct position of the node
-         while(curr != null) {
+        RedBlackNode<T> curr = root;
+        RedBlackNode<T> prev = null;
+        while(curr != null) {
             rblist.add(curr);
             prev = curr;
-            if (key < curr.key)
-                curr = curr.left;
-            else
-                curr = curr.right;
-        } //end of while
-        //insert the node in the correct spot
-//        newNode.parent = prev;
-//        if (prev == null) {
-//            prev = newNode;
-//            newNode.parent = null;
-//        } else
-        if (prev == null){
-
+            if(newNode.item.compareTo(curr.item) == 0) {
+                return;
+            } else if(newNode.item.compareTo(curr.item) < 0) {
+                curr = (RedBlackNode<T>) curr.leftChild;
+            } else if(newNode.item.compareTo(curr.item) > 0) {
+                curr = (RedBlackNode<T>) curr.rightChild;
+            }
         }
-        else if (key < prev.key)
-            prev.left = newNode;
-        else
-            prev.right = newNode;
 
+        if(prev == null) {
+            //prev = newNode;
+        } else if(newNode.item.compareTo(prev.item) < 0) {
+            prev.leftChild = newNode;
+        } else if(newNode.item.compareTo(prev.item) > 0) {
+            prev.rightChild = newNode;
+        }
         rblist.add(newNode);
     } //end of bstInsert
 
 
     /*
-    * get update list
-    * */
-    public void traverAgain(RedBlackNode newNode) {
+     * get update list
+     * */
+    public void traverAgain(RedBlackNode<T> newNode) {
         rblist.clear();
-        RedBlackNode curr = root;
-        RedBlackNode prev = null;
-        int key = newNode.key; //the node value
-        //find the correct position of the node
-        while (curr != null) {
+        RedBlackNode<T> curr = root;
+        RedBlackNode<T> prev = null;
+        while(curr != null) {
             rblist.add(curr);
             prev = curr;
-            if (key < curr.key)
-                curr = curr.left;
-            else
-                curr = curr.right;
-        } //end of while
-        //insert the node in the correct spot
-//        newNode.parent = prev;
-//        if (prev == null) {
-//            prev = newNode;
-//            newNode.parent = null;
-//        } else
-//        if (prev == null) {
-//
-//        } else if (key < prev.key)
-//            prev.left = newNode;
-//        else
-//            prev.right = newNode;
-
-        //rblist.add(newNode);
+            if(newNode.item.compareTo(curr.item) == 0) {
+                return;
+            } else if(newNode.item.compareTo(curr.item) < 0) {
+                curr = (RedBlackNode<T>) curr.leftChild;
+            } else if(newNode.item.compareTo(curr.item) > 0) {
+                curr = (RedBlackNode<T>) curr.rightChild;
+            }
+        }
     }
 
     /****************************************************
@@ -146,67 +133,67 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      *
      * Corrects the insertion to work for the red black tree.
      ***************************************************/
-    public void fixUp(RedBlackNode curr) {
-        RedBlackNode rootNode = rblist.get(0);
-        int size = rblist.size()-1;
-        RedBlackNode currParent = rblist.get(size-1);
-       // System.out.println(currParent);
-        while (curr != root && !currParent.colour.equals("BLACK")) {
+    public void fixUp(RedBlackNode<T> curr) {
+        RedBlackNode<T> rootNode = rblist.get(0);
+        int size = rblist.size() - 1;
+        RedBlackNode<T> currParent = rblist.get(size - 1);
+        // System.out.println(currParent);
+        while(curr != root && !currParent.colour.equals(RedBlackNode.BLACK)) {
             //is currParent the left child of its parent?
             //Right side
-            RedBlackNode currGrandParent = rblist.get(size-2);
-            if (currParent == currGrandParent.left) {
-                RedBlackNode currUncle = currGrandParent.right;
+            RedBlackNode<T> currGrandParent = rblist.get(size - 2);
+            if(currParent == currGrandParent.leftChild) {
+                RedBlackNode<T> currUncle = (RedBlackNode<T>) currGrandParent.rightChild;
                 //case 1: currUncle is red
-                if (currUncle != null && currUncle.colour.equals("RED")) {
-                    currParent.colour = "BLACK";
-                    currUncle.colour = "BLACK";
-                    currGrandParent.colour = "RED";
+                if(currUncle != null && currUncle.colour.equals(RedBlackNode.RED)) {
+                    currParent.colour = RedBlackNode.BLACK;
+                    currUncle.colour = RedBlackNode.BLACK;
+                    currGrandParent.colour = RedBlackNode.RED;
                     //push curr up to it's grandparent.
                     //curr = currParent.parent;
                     //currParent = curr.parent;
                 } else {
                     //case 2: we are our parent's right child
-                    if (curr == currParent.right) {
+                    if(curr == currParent.rightChild) {
                         curr = currParent;
                         leftRotate(curr, 2);
-                        currParent = rblist.get(size-1);
+                        currParent = rblist.get(size - 1);
                         //currParent = curr;
                     }
                     //case 3: our sibling is a black node and we are red
-                    currParent.colour = "BLACK";
-                    currGrandParent = rblist.get(size-2);
-                    currGrandParent.colour = "RED";
+                    currParent.colour = RedBlackNode.BLACK;
+                    currGrandParent = rblist.get(size - 2);
+                    currGrandParent.colour = RedBlackNode.RED;
                     rightRotate(currGrandParent, 3);
                 } //end of if-else chain
             } else {
                 //currParent is the right child
                 //left side
-                RedBlackNode currUncle = currGrandParent.left;
+                RedBlackNode<T> currUncle = (RedBlackNode<T>) currGrandParent.leftChild;
                 //case 1: currUncle is red
-                if (currUncle != null && currUncle.colour.equals("RED")) {
-                    currParent.colour = "BLACK";
-                    currUncle.colour = "BLACK";
-                    currGrandParent.colour = "RED";
+                if(currUncle != null && currUncle.colour.equals(RedBlackNode.RED)) {
+                    currParent.colour = RedBlackNode.BLACK;
+                    currUncle.colour = RedBlackNode.BLACK;
+                    currGrandParent.colour = RedBlackNode.RED;
                     //push curr up to it's grandparent.
                     //curr = currParent.parent;
                     //currParent = curr.parent;
                 } else {
                     //case 2: we are our parent's right child
-                    if (curr == currParent.left) {
+                    if(curr == currParent.leftChild) {
                         curr = currParent;
                         rightRotate(curr, 2);
-                        currParent = rblist.get(size-1);
+                        currParent = rblist.get(size - 1);
                     }
                     //case 3: our sibling is a black node and we are red
-                    currParent.colour = "BLACK";
-                    currGrandParent = rblist.get(size-2);
-                    currGrandParent.colour = "RED";
+                    currParent.colour = RedBlackNode.BLACK;
+                    currGrandParent = rblist.get(size - 2);
+                    currGrandParent.colour = RedBlackNode.RED;
                     leftRotate(currGrandParent, 3);
                 } //end of else
             } //end of if-else
         } //end of while
-        root.colour = "BLACK";
+        root.colour = RedBlackNode.BLACK;
     }//end of fixUp
 
 
@@ -215,24 +202,24 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      *
      * perform a left rotation on the tree
      ***************************************************/
-    public void leftRotate(RedBlackNode curr, int i) {
+    public void leftRotate(RedBlackNode<T> curr, int i) {
         //set up the variables
-        int size = rblist.size()-1;
-        RedBlackNode currGrandParent = rblist.get(size-i);
+        int size = rblist.size() - 1;
+        RedBlackNode<T> currGrandParent = rblist.get(size - i);
         rblist.clear();
-        RedBlackNode currRight = curr.right;
-        RedBlackNode currRightLC = currRight.left;
-        RedBlackNode temp = curr;
+        RedBlackNode<T> currRight = (RedBlackNode<T>) curr.rightChild;
+        RedBlackNode<T> currRightLC = (RedBlackNode<T>) currRight.leftChild;
+        RedBlackNode<T> temp = curr;
         //transfer the right node of curr into curr's position
-        if (currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
-            currGrandParent.left = currRight;
-        } else if (currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
-            currGrandParent.right = currRight;
+        if(currGrandParent != null && currGrandParent.leftChild != null && currGrandParent.leftChild == curr) {
+            currGrandParent.leftChild = currRight;
+        } else if(currGrandParent != null && currGrandParent.rightChild != null && currGrandParent.rightChild == curr) {
+            currGrandParent.rightChild = currRight;
         } //end of if
         curr = currRight;
         //fix new curr's children.
-        curr.left = temp;
-        temp.right = currRightLC;
+        curr.leftChild = temp;
+        temp.rightChild = currRightLC;
         //reassign parent pointers.
 //        if (temp.parent == null)
 //            root = curr;
@@ -241,13 +228,13 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 //            curr.parent = currGrandParent;
 //        if (currRightLC != null)
 //            currRightLC.parent = temp;
-        System.out.println(temp.right);
+        System.out.println(temp.rightChild);
         traverAgain(temp);
 //        rblist.add(root);
 //        rblist.add(currGrandParent);
 //        rblist.add(currRight);
 //        rblist.add(temp);
-        System.out.println("left "+ rblist);
+        System.out.println("left " + rblist);
     } //end of left rotate
 
 
@@ -256,24 +243,24 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      *
      * perform a right rotation on the tree
      ***************************************************/
-    public void rightRotate(RedBlackNode curr, int i) {
+    public void rightRotate(RedBlackNode<T> curr, int i) {
         //set up the variables
-        int size = rblist.size()-1;
-        RedBlackNode currGrandParent = rblist.get(size-i); //6
+        int size = rblist.size() - 1;
+        RedBlackNode<T> currGrandParent = rblist.get(size - i); //6
         rblist.clear();
-        RedBlackNode currLeft = curr.left;
-        RedBlackNode currLeftRC = currLeft.right;
-        RedBlackNode temp = curr;
+        RedBlackNode<T> currLeft = (RedBlackNode<T>) curr.leftChild;
+        RedBlackNode<T> currLeftRC = (RedBlackNode<T>) currLeft.rightChild;
+        RedBlackNode<T> temp = curr;
         //transfer the right node of curr into curr's position
-        if (currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
-            currGrandParent.left = currLeft;
-        } else if (currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
-            currGrandParent.right = currLeft;
+        if(currGrandParent != null && currGrandParent.leftChild != null && currGrandParent.leftChild == curr) {
+            currGrandParent.leftChild = currLeft;
+        } else if(currGrandParent != null && currGrandParent.rightChild != null && currGrandParent.rightChild == curr) {
+            currGrandParent.rightChild = currLeft;
         }
         curr = currLeft;
         //fix new curr's children.
-        curr.right = temp;
-        temp.left = currLeftRC;
+        curr.rightChild = temp;
+        temp.leftChild = currLeftRC;
         //reassign parent pointers.
 //        if (temp.parent == null)
 //            root = curr;
@@ -284,31 +271,30 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 //            currLeftRC.parent = curr;
 
 
-        System.out.println(temp.right);
+        System.out.println(temp.rightChild);
         traverAgain(temp);
-        System.out.println("right "+rblist);
+        System.out.println("right " + rblist);
     } //end of right rotate
 
     public boolean isEmpty() {
         return root == null;
     } //end of isEmpty
 
-    public RedBlackNode search(int key) {
-        RedBlackNode curr = root;
-        RedBlackNode toRet = null;
-        while (curr != null && curr.key != key) {
-            if (curr.key < key) {
-                curr = curr.right;
-            } else {
-                curr = curr.left;
-            } //end of if-else
-        } //end of while
-        if (curr != null && curr.key == key)
-            toRet = curr;
-        return toRet;
+    public RedBlackNode<T> search(T key) {
+        RedBlackNode<T> curr = root;
+        while(curr != null) {
+            if(key.compareTo(curr.item) == 0) {
+                return curr;
+            } else if(key.compareTo(curr.item) < 0) {
+                curr = (RedBlackNode<T>) curr.leftChild;
+            } else if(key.compareTo(curr.item) > 0) {
+                curr = (RedBlackNode<T>) curr.rightChild;
+            }
+        }
+        return null;
     } //end of search
 
-    public RedBlackNode getRoot() {
+    public RedBlackNode<T> getRoot() {
         return root;
     }//end of getRoot
 
@@ -320,16 +306,14 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         return this.getDepth(this.root);
     } //end of getDepth
 
-    private int getDepth(RedBlackNode node) {
-        if (node != null) {
+    private int getDepth(Node<T> node) {
+        if(node != null) {
             int right_depth;
-            int left_depth = this.getDepth(node.left);
-            return left_depth > (right_depth = this.getDepth(node.right)) ? left_depth + 1 : right_depth + 1;
+            int left_depth = this.getDepth(node.leftChild);
+            return left_depth > (right_depth = this.getDepth(node.rightChild)) ? left_depth + 1 : right_depth + 1;
         }
         return 0;
     } //end of getDepth
-
-
 
 
     /**
@@ -340,116 +324,65 @@ public class RedBlackTree<T extends Comparable<T>> extends BinarySearchTree<T> {
      * @param currentNode : Current Node that program is visiting.
      */
     @Override
-    protected void nodeTraversed(Node currentNode) {
+    protected void nodeTraversed(Node<T> currentNode) {
 
     }
 
-    @Override
-    protected void nodeFinished(Node node){
-        //
-    }
-
-    /* toString
-     * @returns	the string representation of the tree.
+    /**
+     * toString
+     *
+     * @return the string representation of the tree.
      */
     public String toString() {
         return toString(root);
     }
 
-    protected String toString(RedBlackNode node) {
-        if (node == null) {
+    protected String toString(RedBlackNode<T> node) {
+        if(node == null || node.item == null) {
             return "";
         }
-        return toString(node.key) + " (" + toString(node.left) + ", " +
-                toString(node.right) + ") ";
+        return node.item + "(" + toString(node.leftChild) + ", " +
+                toString(node.rightChild) + ")";
     }
 
-    private String toString(int key) {
-        return String.valueOf(key);
+    @Override
+    protected Node<T> preModification(Node<T> node) {
+        return node.deepClone(node); // Pass the reference of the cloned Node back to caller.
     }
 
+    public static void main(String[] args) {
+        RedBlackTree<Integer> tree = new RedBlackTree<>();
+        ////test case 1
+        tree.add(12);
+        tree.add(5);
+        tree.add(11);
+        tree.add(15);
+        tree.add(13);
+        tree.add(14);
+        tree.add(16);
 
-    /*
-    * draws the Red black tree
-    * */
-    static int drawRBT(Graphics g, RedBlackNode current,
-                       int x, int level, int nodeCount, Map<RedBlackNode, Point> map, int BOX_SIZE) {
+////testcase 2
+        tree.add(10);
+        tree.add(8);
+        tree.add(13);
+        tree.add(6);
+        tree.add(7);
 
 
-        if (current.left != null) {
-            nodeCount = drawRBT(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
-        }
+        //test case 3
+        tree.add(10);
+        tree.add(13);
+        tree.add(8);
+        tree.add(6);
+        tree.add(7);
+        tree.add(9);
+        tree.add(11);
+        tree.add(12);
+        tree.add(16);
+        tree.add(18);
 
-        int currentX = x + nodeCount * BOX_SIZE;
-        int currentY = level * 2 * BOX_SIZE + BOX_SIZE;
-        nodeCount++;
-        map.put(current, new Point(currentX, currentY));
-
-        if (current.right != null) {
-            nodeCount = drawRBT(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
-        }
-
-        g.setColor(current.getColor());
-        if (current.left != null) {
-            Point leftPoint = map.get(current.left);
-            g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
-        }
-        if (current.right!= null) {
-            Point rightPoint = map.get(current.right);
-            g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
-
-        }
-//        if (current instanceof RedBlackNode) {
-//            g.setColor(Color.WHITE);
-//        } else {
-//            g.setColor(Color.YELLOW);
-//        }
-
-        Point currentPoint = map.get(current);
-        g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
-        g.setColor(Color.BLACK);
-        g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
-        Font f = new Font("courier new", Font.BOLD, 16);
-        g.setFont(f);
-        g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
-        return nodeCount;
-
+        System.out.println(tree.rblist);
+        System.out.println(TreeBuilder.visualise(tree.root));
     }
-
-//    public static void main(String[] args) {
-//        RedBlackTree tree = new RedBlackTree();
-//        ////test case 1
-////        tree.insert(6);
-////        tree.insert(12);
-////        tree.insert(5);
-////        tree.insert(11);
-////        tree.insert(15);
-////        tree.insert(13);
-////        tree.insert(14);
-////        tree.insert(16);
-//
-//////testcase 2
-//            tree.insert(10);
-//            tree.insert(8);
-//            tree.insert(13);
-//            tree.insert(6);
-//            tree.insert(7);
-//
-//
-//        ////test case 3
-////        tree.insert(10);
-////        tree.insert(13);
-////        tree.insert(8);
-////        tree.insert(6);
-////        tree.insert(7);
-////        tree.insert(9);
-////        tree.insert(11);
-////        tree.insert(12);
-////        tree.insert(16);
-////        tree.insert(18);
-//
-//        System.out.println(tree.rblist);
-//        System.out.println(tree);
-//    }
 
 }

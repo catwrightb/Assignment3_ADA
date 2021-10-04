@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> {
     protected List<Node<T>> versionRepository;
@@ -17,6 +18,10 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
 
     public int getCurrentVersionNo() {
         return versionRepository.size() - 1;
+    }
+
+    public Integer[] getVersionNos() {
+        return IntStream.rangeClosed(0, this.getCurrentVersionNo()).boxed().toArray(Integer[]::new);
     }
 
     /* Gets a saved version of a tree. */
@@ -75,7 +80,7 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
 
 
     public static void main(String[] args) {  // create the binary search tree
-        PersistentBST<String> tree = new PersistentBST<String>();
+        PersistentBST<String> tree = new PersistentBST<>();
         // build the tree
         System.out.println(tree.getCurrentVersionNo());
         System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
