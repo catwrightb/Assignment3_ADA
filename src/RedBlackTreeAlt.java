@@ -5,20 +5,25 @@ import java.util.stream.IntStream;
 public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T> {
 
 
-    public ArrayList<Node<T>> rblist = new ArrayList<Node<T>>();
-    public ArrayList<Node<T>> testlist = new ArrayList<Node<T>>();
-//    protected ArrayList<Node<T>> versionRepository = new ArrayList<>();
-//    protected ArrayList<Node<T>> treeRepository = new ArrayList<>();
-//    protected Stack<Node<T>> visitedNodes;
+    public ArrayList<Node<T>> rblist = new ArrayList<>();
+    public ArrayList<Node<T>> testlist = new ArrayList<>();
     protected java.util.List<Node<T>> versionRepository;
     protected List<BinarySearchTree<T>> treeRepository;
     protected Stack<Node<T>> visitedNodes;
     Stack<Node<T>> test = new Stack<>();
 
+    public RedBlackTreeAlt() {
+        super();
+        this.versionRepository = new ArrayList<>();
+        this.versionRepository.add(this.root);
+        this.treeRepository = new ArrayList<>();
+        this.treeRepository.add(new BinarySearchTree<>(this.root));
+        this.visitedNodes = new Stack<>();
+    }
+
     public Integer[] getVersionNos() {
         return IntStream.rangeClosed(0, this.getCurrentVersionNo()).boxed().toArray(Integer[]::new);
     }
-
 
     public int getCurrentVersionNo() {
         return (versionRepository.size() == 0 ? 0 : versionRepository.size() - 1);
@@ -29,28 +34,16 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         return versionRepository.get(versionNo);
     }
 
-
-    public RedBlackTreeAlt()
-    {
-        super();
-        this.versionRepository = new ArrayList<>();
-        this.versionRepository.add(this.root);
-        this.treeRepository = new ArrayList<>();
-        this.treeRepository.add(new BinarySearchTree<>(this.root));
-        this.visitedNodes = new Stack<>();
-    }
-
-    public void printPostorder(Node<T> node)
-    {
-        if (node == null){
+    public void printPostorder(Node<T> node) {
+        if(node == null) {
             return;
         }
 
-        if (node.left != null){
+        if(node.left != null) {
             printPostorder((node.left));
         }
 
-        if (node.right != null){
+        if(node.right != null) {
             printPostorder((node.right));
         }
 
@@ -59,22 +52,22 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
         //if current node has 2 children
-        if (!test.isEmpty() && newNode.right != null){
-            if (test.peek().item == newNode.right.item ){
+        if(!test.isEmpty() && newNode.right != null) {
+            if(test.peek().item == newNode.right.item) {
                 newNode.right = test.pop();
             }
 
         }
 
-        if (!test.isEmpty() && newNode.left != null){
-            if (test.peek().item == newNode.left.item){
+        if(!test.isEmpty() && newNode.left != null) {
+            if(test.peek().item == newNode.left.item) {
                 newNode.left = test.pop();
             }
 
         }
 
 
-        if (newNode.item == root.item){
+        if(newNode.item == root.item) {
             root = newNode;
 
         }
@@ -82,13 +75,12 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
     }
 
-    protected void helperForVersioning(int i){
+    protected void helperForVersioning(int i) {
         printPostorder(root);
-        if (i == 2){
+        if(i == 2) {
             postModification(root);
-        }
-        else {
-           // this.root = root; // Update the current root node.
+        } else {
+            // this.root = root; // Update the current root node.
             this.visitedNodes.clear();
             this.test.clear();
         }
@@ -115,7 +107,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      * a helper method that inserts the given node
      ***************************************************/
     public void insertRBT(Node<T> newNode) {
-        if (isEmpty() || root.item == newNode.item) {
+        if(isEmpty() || root.item == newNode.item) {
             root = newNode;
             helperForVersioning(2);
 
@@ -131,7 +123,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         }
         root.color = "BLACK";
 
-       // postModification(modified);
+        // postModification(modified);
     } //end of insert
 
     /****************************************************
@@ -147,24 +139,23 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         //int key = newNode.key; //the node value
         T key = newNode.item;
         //find the correct position of the node
-        while (curr != null) {
+        while(curr != null) {
 
-                rblist.add(curr);
-                prev = curr;
-                if (key.compareTo(curr.item) < 1)
-                    curr = curr.left;
-                else
-                    curr = curr.right;
+            rblist.add(curr);
+            prev = curr;
+            if(key.compareTo(curr.item) < 1)
+                curr = curr.left;
+            else
+                curr = curr.right;
 
 
         } //end of while
 
 
         //insert the node in the correct spot
-        if (prev == null){
+        if(prev == null) {
             //blank as prev should never be null
-        }
-        else if (key.compareTo(prev.item) < 1)
+        } else if(key.compareTo(prev.item) < 1)
             prev.left = newNode;
         else
             prev.right = newNode;
@@ -175,18 +166,18 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
     /*
-    * get update list by only traversing path from root to newNode
-    * */
+     * get update list by only traversing path from root to newNode
+     * */
     public void traverAgain(Node<T> newNode) {
         rblist.clear();
         Node<T> curr = root;
         Node<T> prev = null;
         T item = newNode.item; //the node value
         //find the correct position of the node
-        while (curr != null) {
+        while(curr != null) {
             rblist.add(curr);
             prev = curr;
-            if (item.compareTo(curr.item) < 1)
+            if(item.compareTo(curr.item) < 1)
                 curr = curr.left;
             else
                 curr = curr.right;
@@ -199,19 +190,19 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      * Corrects the insertion to work for the red black tree.
      ***************************************************/
     public void fixUp(Node<T> curr) {
-        Node rootNode = rblist.get(0);
-        int size = rblist.size()-1;
+        Node<T> rootNode = rblist.get(0);
+        int size = rblist.size() - 1;
         Node<T> currParent = findPreviousIndex(curr);
-       // System.out.println(currParent);
-        while (curr != root && !currParent.color.equals("BLACK")) {
+        // System.out.println(currParent);
+        while(curr != root && !currParent.color.equals("BLACK")) {
             //is currParent the left child of its parent?
             //Right side
             Node<T> currGrandParent = findPreviousIndex(currParent);
 
-            if (currParent == currGrandParent.left) {
+            if(currParent == currGrandParent.left) {
                 Node<T> currUncle = currGrandParent.right;
                 //case 1: currUncle is red
-                if (currUncle != null && currUncle.color.equals("RED")) {
+                if(currUncle != null && currUncle.color.equals("RED")) {
                     currParent.color = "BLACK";
                     currUncle.color = "BLACK";
                     currGrandParent.color = "RED";
@@ -220,13 +211,13 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
                     curr = currGrandParent;
                     //currParent = curr.parent;
                     Node<T> greatGrandP = findPreviousIndex(curr);
-                    if (greatGrandP != null){
+                    if(greatGrandP != null) {
                         currParent = greatGrandP;
                     }
 
                 } else {
                     //case 2: we are our parent's right child
-                    if (curr == currParent.right) {
+                    if(curr == currParent.right) {
                         curr = currParent;
                         leftRotate(curr, 2);
                         currParent = findPreviousIndex(curr);
@@ -236,10 +227,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
                     currParent.color = "BLACK";
                     currGrandParent = findPreviousIndex(currParent);
                     currGrandParent.color = "RED";
-                    if (currGrandParent == root){
+                    if(currGrandParent == root) {
                         rightRotate(currGrandParent, 2);
-                    }
-                    else {
+                    } else {
                         rightRotate(currGrandParent, 3);
                     }
 
@@ -249,7 +239,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
                 //left side
                 Node<T> currUncle = currGrandParent.left;
                 //case 1: currUncle is red
-                if (currUncle != null && currUncle.color.equals("RED")) {
+                if(currUncle != null && currUncle.color.equals("RED")) {
                     currParent.color = "BLACK";
                     currUncle.color = "BLACK";
                     currGrandParent.color = "RED";
@@ -259,13 +249,13 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
                     curr = currGrandParent;
                     //currParent = curr.parent;
                     Node<T> greatGrandP = findPreviousIndex(curr);
-                    if (greatGrandP != null){
+                    if(greatGrandP != null) {
                         currParent = greatGrandP;
                     }
 
                 } else {
                     //case 2: we are our parent's right child
-                    if (curr == currParent.left) {
+                    if(curr == currParent.left) {
                         curr = currParent;
                         rightRotate(curr, 2);
                         currParent = findPreviousIndex(curr);
@@ -274,10 +264,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
                     currParent.color = "BLACK";
                     currGrandParent = findPreviousIndex(currParent);
                     currGrandParent.color = "RED";
-                    if (currGrandParent == root){
+                    if(currGrandParent == root) {
                         leftRotate(currGrandParent, 2);
-                    }
-                    else {
+                    } else {
                         leftRotate(currGrandParent, 3);
                     }
 
@@ -296,16 +285,16 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      ***************************************************/
     public void leftRotate(Node<T> curr, int i) {
         //set up the variables
-        int size = rblist.size()-1;
+        int size = rblist.size() - 1;
         Node<T> currGrandParent = findPreviousIndex(curr);
         rblist.clear();
         Node<T> currRight = curr.right;
         Node<T> currRightLC = currRight.left;
         Node<T> temp = curr;
         //transfer the right node of curr into curr's position
-        if (currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
+        if(currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
             currGrandParent.left = currRight;
-        } else if (currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
+        } else if(currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
             currGrandParent.right = currRight;
         } //end of if
         curr = currRight;
@@ -314,7 +303,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         temp.right = currRightLC;
 
         //change root if present root has not children and the temp is the root
-        if (temp == root){
+        if(temp == root) {
             root = curr;
         }
 
@@ -330,16 +319,16 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      ***************************************************/
     public void rightRotate(Node<T> curr, int i) {
         //set up the variables
-        int size = rblist.size()-1;
+        int size = rblist.size() - 1;
         Node<T> currGrandParent = findPreviousIndex(curr); //6
         rblist.clear();
         Node<T> currLeft = curr.left;
         Node<T> currLeftRC = currLeft.right;
         Node<T> temp = curr;
         //transfer the right node of curr into curr's position
-        if (currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
+        if(currGrandParent != null && currGrandParent.left != null && currGrandParent.left == curr) {
             currGrandParent.left = currLeft;
-        } else if (currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
+        } else if(currGrandParent != null && currGrandParent.right != null && currGrandParent.right == curr) {
             currGrandParent.right = currLeft;
         }
         curr = currLeft;
@@ -348,7 +337,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         temp.left = currLeftRC;
 
         //change root if present root has not children and the temp is the root
-        if (temp == root){
+        if(temp == root) {
             root = curr;
         }
 
@@ -363,8 +352,6 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
 
-
-
     public void resetTree() {
         root = null;
     } //end of resetTree
@@ -374,7 +361,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     } //end of getDepth
 
     private int getDepth(Node<T> node) {
-        if (node != null) {
+        if(node != null) {
             int right_depth;
             int left_depth = this.getDepth(node.left);
             return left_depth > (right_depth = this.getDepth(node.right)) ? left_depth + 1 : right_depth + 1;
@@ -383,15 +370,14 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     } //end of getDepth
 
 
-
-    public Node<T> findPreviousIndex(Node<T> find){
+    public Node<T> findPreviousIndex(Node<T> find) {
         Node<T> temp = find;
-        if (find != root) {
+        if(find != root) {
 
             int position = -1;
 
-            for (int i = 0; i < rblist.size(); i++) {
-                if (find == rblist.get(i)) {
+            for(int i = 0; i < rblist.size(); i++) {
+                if(find == rblist.get(i)) {
                     position = i;
                 }
             }
@@ -410,18 +396,17 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
     @Override
+    protected Node<T> preModification(Node<T> node) {
+        return node.deepClone(node); // Pass the reference of the cloned Node back to caller.
+    }
+
+    @Override
     protected void postModification(Node<T> modifiedRoot) {
         this.versionRepository.add(modifiedRoot);
         this.treeRepository.add(new BinarySearchTree<>(modifiedRoot));
         this.root = modifiedRoot; // Update the current root node.
         this.visitedNodes.clear();
         this.test.clear();
-    }
-
-
-    @Override
-    protected Node<T> preModification(Node<T> node) {
-        return node.deepClone(node); // Pass the reference of the cloned Node back to caller.
     }
 
     @Override
@@ -440,7 +425,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
     protected String toString(Node<T> node) {
-        if (node == null) {
+        if(node == null) {
             return "";
         }
         return toString(node.item) + " (" + toString(node.left) + ", " +
@@ -453,26 +438,23 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
     /*
-    * Remove methods
-    *
-    * */
+     * Remove methods
+     * */
     @Override
-    public void remove(T find){
-        RedBlackTreeAlt tree2 = new RedBlackTreeAlt();
+    public void remove(T find) {
+        RedBlackTreeAlt<T> tree2 = new RedBlackTreeAlt<>();
         this.addToList();
 
-        for (int i = 0; i < testlist.size(); i++) {
+        for(int i = 0; i < testlist.size(); i++) {
             Node<T> node = testlist.get(i);
 
-            if (find != node.item) {
-               tree2.insertRB(node.item);
+            if(find != node.item) {
+                tree2.insertRB(node.item);
             }
         }
 
-
         root = tree2.root;
         this.postModification(root);
-
     }
 
     public void addToList() {
@@ -480,7 +462,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
     protected String addToList(Node<T> node) {
-        if (node == null) {
+        if(node == null) {
             return "";
         }
         return addToList(node.item) + " (" + addToList(node.left) + ", " +
@@ -488,7 +470,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
     private String addToList(T item) {
-        testlist.add(new Node<T>(item));
+        testlist.add(new Node<>(item));
         return String.valueOf(item);
     }
 
