@@ -12,7 +12,7 @@ import java.util.*;
 
 public class BinarySearchTree<T extends Comparable<T>> {
 
-    protected Node<T> root;
+    protected Node<T> root = null;
 
     public BinarySearchTree() {
         root = new Node<>();
