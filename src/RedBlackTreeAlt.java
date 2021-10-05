@@ -72,7 +72,6 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         }
 
 
-
         if (newNode.item == root.item){
             root = newNode;
 
