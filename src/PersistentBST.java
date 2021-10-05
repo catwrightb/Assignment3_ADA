@@ -1,8 +1,8 @@
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> {
     protected List<Node<T>> versionRepository;
-    protected List<BinarySearchTree<T>> treeRepository;
     protected Stack<Node<T>> visitedNodes;
 
     public PersistentBST()
@@ -10,13 +10,15 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
         super();
         this.versionRepository = new ArrayList<>();
         this.versionRepository.add(this.root);
-        this.treeRepository = new ArrayList<>();
-        this.treeRepository.add(new BinarySearchTree<>(this.root));
         this.visitedNodes = new Stack<>();
     }
 
     public int getCurrentVersionNo() {
-        return versionRepository.size() - 1;
+        return (versionRepository.size() == 0 ? 0 : versionRepository.size() - 1);
+    }
+
+    public Integer[] getVersionNos() {
+        return IntStream.rangeClosed(0, this.getCurrentVersionNo()).boxed().toArray(Integer[]::new);
     }
 
     /* Gets a saved version of a tree. */
@@ -30,8 +32,6 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
         this.root = new Node<>(); // old root and children nodes will be garbage collected.
         versionRepository.clear();
         versionRepository.add(this.root);
-        treeRepository.clear();
-        treeRepository.add(new BinarySearchTree<>(this.root));
         visitedNodes.clear();
     }
 
@@ -68,20 +68,14 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
     @Override
     protected void postModification(Node<T> modifiedRoot) {
         this.versionRepository.add(modifiedRoot);
-        this.treeRepository.add(new BinarySearchTree<>(modifiedRoot));
         this.root = modifiedRoot; // Update the current root node.
         this.visitedNodes.clear();
     }
 
 
-    public static void main(String[] args) {  // create the binary search tree
-        PersistentBST<Integer> tree = new PersistentBST<Integer>();
-
-        tree.add(4);
-        tree.add(5);
-        tree.add(6);
-
-        // build the tree
+//    public static void main(String[] args) {  // create the binary search tree
+//        PersistentBST<String> tree = new PersistentBST<>();
+//        // build the tree
 //        System.out.println(tree.getCurrentVersionNo());
 //        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
 //        System.out.println(tree.visitedNodes);
@@ -113,10 +107,10 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
 //        tree.add("owl");
 //        System.out.println("Modified Tree: " + tree);
 //        System.out.println();
-
+//
 //        for(int i = 0; i < tree.versionRepository.size(); i++) {
 //            System.out.println("Tree["+i+"]: " + TreeBuilder.visualise(tree.versionRepository.get(i)));
 //            //tree.visitedNodes.forEach((System.out::println));
 //        }
-    }
+//    }
 }
