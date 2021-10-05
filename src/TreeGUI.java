@@ -20,8 +20,8 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
     //private RedBlackNode<?> rbtroot; //USE THIS root node
     private int numberNodes = 0;
     private JTextField addNodeTextField, removeNodeTextField;
-    public static int PANEL_H = 500;
-    public static int PANEL_W = 700;
+    public static int PANEL_H = 700;
+    public static int PANEL_W = 900;
     private final int BOX_SIZE = 40;
     private JLabel nodeCounterLabel;
 
@@ -123,7 +123,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         // Add parsed user input(s) into RBT.
                         Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
                         System.out.println(redBlackTree);
-                        localRoot = redBlackTree.getRoot();
+                        localRoot = redBlackTree.root;
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -136,40 +136,87 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         }
     }
 
+    public int versionCheck(){
+        int version = 0;
+        switch (treeType) {
+            case "Binary Search Tree":
+                // Remove parsed user input(s) from BST.
+                break;
+            case "Persistent":
+                // Add parsed user input(s) into persistentBST.
+                version = persistentBST.getCurrentVersionNo();
+                break;
+            case "Red and Black Tree":
+                // Add parsed user input(s) into RBT.
+                version = redBlackTree.getCurrentVersionNo();
+                break;
+            default:
+        }
+
+        return version;
+    }
+
     public void removeNode() {
-        if(!removeNodeTextField.getText().isEmpty() && treeType != null) {
+
+        int version = versionCheck();
+
+        if(!removeNodeTextField.getText().isEmpty() && treeType != null ) {
             String[] userInput = removeNodeTextField.getText().trim().split(",");
 
             if(!isNumber(userInput[0])) {
                 JOptionPane.showMessageDialog(this, "Please enter numbers only", "Warning", JOptionPane.ERROR_MESSAGE);
             } else {
-                switch(treeType) {
-                    case "Binary Search Tree":
-                        // Remove parsed user input(s) from BST.
-                        Arrays.stream(userInput).forEach(element -> binarySearchTree.remove(Integer.parseInt(element)));
-                        System.out.println(binarySearchTree);
-                        localRoot = binarySearchTree.root;
-                        break;
-                    case "Persistent":
-                        // Add parsed user input(s) into persistentBST.
-                        Arrays.stream(userInput).forEach(element -> persistentBST.remove(Integer.parseInt(element)));
-                        System.out.println(persistentBST);
-                        localRoot = persistentBST.root;
-                        break;
-                    case "Red and Black Tree":
-                        // Add parsed user input(s) into RBT.
-                        //Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
-                        System.out.println(redBlackTree);
-                        localRoot = redBlackTree.getRoot();
-                        break;
-                    default:
-                        JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
+
+                if (containedInTree(userInput[0])){
+                    switch (treeType) {
+                        case "Binary Search Tree":
+                            // Remove parsed user input(s) from BST.
+                            Arrays.stream(userInput).forEach(element -> binarySearchTree.remove(Integer.parseInt(element)));
+                            System.out.println(binarySearchTree);
+                            localRoot = binarySearchTree.root;
+                            break;
+                        case "Persistent":
+                            // Add parsed user input(s) into persistentBST.
+                            if (version == versionSelected){
+                                Arrays.stream(userInput).forEach(element -> persistentBST.remove(Integer.parseInt(element)));
+                                System.out.println(persistentBST);
+                                localRoot = persistentBST.root;
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(this, "Please only remove from the latest branch!", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            break;
+                        case "Red and Black Tree":
+                            // Add parsed user input(s) into RBT.
+                            if (version == versionSelected){
+                                Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
+                                System.out.println(redBlackTree);
+                                localRoot = redBlackTree.root;
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(this, "Please only remove from the latest branch!", "Error", JOptionPane.ERROR_MESSAGE);
+
+                            }
+
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    removeNodeTextField.setText("");
+                    nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
+                    drawPanel.repaint();
+                    toggleVersionComboBox();
                 }
-                removeNodeTextField.setText("");
-                nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
-                drawPanel.repaint();
-                toggleVersionComboBox();
+                else {
+                    JOptionPane.showMessageDialog(this, "This value is not present.", "Error", JOptionPane.ERROR_MESSAGE);
+                    removeNodeTextField.setText("");
+
+                }
+
+
             }
+
         }
     }
 
@@ -197,10 +244,30 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                     JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
             }
             numberNodes = 0;
-            nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
+            nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
             drawPanel.repaint();
             toggleVersionComboBox();
         }
+    }
+
+    public boolean containedInTree(String userInput){
+        boolean contained = true;
+        switch (treeType) {
+            case "Binary Search Tree":
+                // Remove parsed user input(s) from BST.
+                contained = binarySearchTree.contains(Integer.valueOf(userInput));
+                break;
+            case "Persistent":
+                // Add parsed user input(s) into persistentBST.
+                contained = persistentBST.contains(Integer.valueOf(userInput));
+                break;
+            case "Red and Black Tree":
+                // Add parsed user input(s) into RBT.
+                contained = redBlackTree.contains(Integer.valueOf(userInput));
+                break;
+            default:
+        }
+        return contained;
     }
 
     public void toggleVersionComboBox() {
@@ -256,7 +323,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         //toggleVersionComboBox();
 
         drawPanel.repaint();
-        nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
+        //nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
         //nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot)); //count from root LVR
     }
 

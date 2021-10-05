@@ -12,7 +12,7 @@ import java.util.*;
 
 public class BinarySearchTree<T extends Comparable<T>> {
 
-    protected Node<T> root;
+    protected Node<T> root = null;
 
     public BinarySearchTree() {
         root = new Node<>();
@@ -258,12 +258,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
         this.root = modifiedRoot; // Update the reference to the root node.
     }
 
-    // hooker methods
-    protected void rotate(T node) {
-        //
-    }
 
-    protected void insertRB(Node<T> newNode) {
+    protected void insertRB(T val) {
 
     }
 
@@ -299,45 +295,5 @@ public class BinarySearchTree<T extends Comparable<T>> {
         public void remove() {
             throw new UnsupportedOperationException();
         }
-    }
-
-
-    static int drawBST(Graphics g, Node current,
-                       int x, int level, int nodeCount, Map<Node, Point> map, int BOX_SIZE) {
-
-
-        if (current.left != null) {
-            nodeCount = drawBST(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
-        }
-
-        int currentX = x + nodeCount * BOX_SIZE;
-        int currentY = level * 2 * BOX_SIZE + BOX_SIZE;
-        nodeCount++;
-        map.put(current, new Point(currentX, currentY));
-
-        if (current.right != null) {
-            nodeCount = drawBST(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
-        }
-        g.setColor(Color.YELLOW);
-
-        if (current.left != null) {
-            Point leftPoint = map.get(current.left);
-            g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
-        }
-        if (current.right != null) {
-            Point rightPoint = map.get(current.right);
-            g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
-
-        }
-
-        Point currentPoint = map.get(current);
-        g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
-        g.setColor(Color.BLACK);
-        g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
-        Font f = new Font("courier new", Font.BOLD, 16);
-        g.setFont(f);
-        g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
-        return nodeCount;
-
     }
 }
