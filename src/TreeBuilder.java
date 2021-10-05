@@ -59,7 +59,7 @@ public class TreeBuilder {
             g.setColor(Color.BLUE);
         }
         else {
-            g.setColor(Color.WHITE);
+            g.setColor(Color.gray);
         }
 
         if (current.left != null) {

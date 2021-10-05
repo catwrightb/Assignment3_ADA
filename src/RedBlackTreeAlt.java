@@ -21,7 +21,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
     public int getCurrentVersionNo() {
-        return versionRepository.size() - 1;
+        return (versionRepository.size() == 0 ? 0 : versionRepository.size() - 1);
     }
 
     /* Gets a saved version of a tree. */
