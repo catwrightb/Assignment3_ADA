@@ -137,13 +137,30 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
     }
 
     public void removeNode() {
-        if(!removeNodeTextField.getText().isEmpty() && treeType != null) {
+        int version = 0;
+        switch (treeType) {
+            case "Binary Search Tree":
+                // Remove parsed user input(s) from BST.
+
+                break;
+            case "Persistent":
+                // Add parsed user input(s) into persistentBST.
+                version = persistentBST.getCurrentVersionNo();
+                break;
+            case "Red and Black Tree":
+                // Add parsed user input(s) into RBT.
+                version = redBlackTree.getCurrentVersionNo();
+                break;
+            default:
+        }
+
+        if(!removeNodeTextField.getText().isEmpty() && treeType != null ) {
             String[] userInput = removeNodeTextField.getText().trim().split(",");
 
             if(!isNumber(userInput[0])) {
                 JOptionPane.showMessageDialog(this, "Please enter numbers only", "Warning", JOptionPane.ERROR_MESSAGE);
             } else {
-                switch(treeType) {
+                switch (treeType) {
                     case "Binary Search Tree":
                         // Remove parsed user input(s) from BST.
                         Arrays.stream(userInput).forEach(element -> binarySearchTree.remove(Integer.parseInt(element)));
@@ -152,15 +169,29 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         break;
                     case "Persistent":
                         // Add parsed user input(s) into persistentBST.
-                        Arrays.stream(userInput).forEach(element -> persistentBST.remove(Integer.parseInt(element)));
-                        System.out.println(persistentBST);
-                        localRoot = persistentBST.root;
+                        if (version == versionSelected){
+                            Arrays.stream(userInput).forEach(element -> persistentBST.remove(Integer.parseInt(element)));
+                            System.out.println(persistentBST);
+                            localRoot = persistentBST.root;
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(this, "Please only remove from the latest branch!", "Error", JOptionPane.ERROR_MESSAGE);
+
+                        }
+
                         break;
                     case "Red and Black Tree":
                         // Add parsed user input(s) into RBT.
-                        Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
-                        System.out.println(redBlackTree);
-                        localRoot = redBlackTree.root;
+                        if (version == versionSelected){
+                            Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
+                            System.out.println(redBlackTree);
+                            localRoot = redBlackTree.root;
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(this, "Please only remove from the latest branch!", "Error", JOptionPane.ERROR_MESSAGE);
+
+                        }
+
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -170,6 +201,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                 drawPanel.repaint();
                 toggleVersionComboBox();
             }
+
         }
     }
 
@@ -256,8 +288,8 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         //toggleVersionComboBox();
 
         drawPanel.repaint();
-        nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
-        //nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot)); //count from root LVR
+        //nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
+        nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot)); //count from root LVR
     }
 
     @Override
