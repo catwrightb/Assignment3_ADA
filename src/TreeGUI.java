@@ -123,7 +123,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         // Add parsed user input(s) into RBT.
                         Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
                         System.out.println(redBlackTree);
-                        localRoot = redBlackTree.getRoot();
+                        localRoot = redBlackTree.root;
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -158,9 +158,9 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         break;
                     case "Red and Black Tree":
                         // Add parsed user input(s) into RBT.
-                        //Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
+                        Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
                         System.out.println(redBlackTree);
-                        localRoot = redBlackTree.getRoot();
+                        localRoot = redBlackTree.root;
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
