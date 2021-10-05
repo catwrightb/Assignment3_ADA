@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T> {
 
@@ -15,7 +16,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     protected Stack<Node<T>> visitedNodes;
     Stack<Node<T>> test = new Stack<>();
 
-
+    public Integer[] getVersionNos() {
+        return IntStream.rangeClosed(0, this.getCurrentVersionNo()).boxed().toArray(Integer[]::new);
+    }
 
 
     public int getCurrentVersionNo() {
@@ -443,6 +446,14 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         return node.deepClone(node); // Pass the reference of the cloned Node back to caller.
     }
 
+    @Override
+    public void clear() {
+        this.root = new Node<>(); // old root and children nodes will be garbage collected.
+        versionRepository.clear();
+        versionRepository.add(this.root);
+        visitedNodes.clear();
+    }
+
     /* toString
      * @returns	the string representation of the tree.
      */
@@ -543,82 +554,82 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
     }
 
-    public static void main(String[] args) {
-        RedBlackTreeAlt tree = new RedBlackTreeAlt();
-
-//TESTCASE
+//    public static void main(String[] args) {
+//        RedBlackTreeAlt tree = new RedBlackTreeAlt();
+//
+////TESTCASE
+////        tree.insertRB(10);
+////        tree.insertRB(5);
+////        tree.insertRB(1);
+////        tree.insertRB(2);
+//
+//
+////        tree.insertRB(4);
+////        tree.insertRB(6);
+////        tree.insertRB(8);
+////        tree.insertRB(20);
+////        tree.insertRB(30);
+//       // tree.insert(40);
+//
+//
+////Test case
+////        tree.insert(20);
+////        tree.insert(10);
+////        tree.insert(30);
+////        tree.insert(5);
+////        tree.insert(4);
+////        tree.insert(3);
+////        tree.insert(2);
+////        tree.insert(1);
+////        tree.insert(40);
+////        tree.insert(50);
+////        tree.insert(60);
+////        tree.insert(70);
+////        tree.insert(80);
+//
+//
+//        ////test case 1
+////        tree.insert(6);
+////        tree.insert(12);
+////        tree.insert(5);
+////        tree.insert(11);
+////        tree.insert(15);
+////        tree.insert(13);
+////        tree.insert(14);
+////        tree.insert(16);
+//
+//////testcase 2
+////            tree.insert(10);
+////            tree.insert(8);
+////            tree.insert(13);
+////            tree.insert(6);
+////            tree.insert(7);
+//
+//
+//        ////test case 3
 //        tree.insertRB(10);
-//        tree.insertRB(5);
-//        tree.insertRB(1);
-//        tree.insertRB(2);
-
-
-//        tree.insertRB(4);
-//        tree.insertRB(6);
+//        tree.insertRB(13);
 //        tree.insertRB(8);
-//        tree.insertRB(20);
-//        tree.insertRB(30);
-       // tree.insert(40);
-
-
-//Test case
-//        tree.insert(20);
-//        tree.insert(10);
-//        tree.insert(30);
-//        tree.insert(5);
-//        tree.insert(4);
-//        tree.insert(3);
-//        tree.insert(2);
-//        tree.insert(1);
-//        tree.insert(40);
-//        tree.insert(50);
-//        tree.insert(60);
-//        tree.insert(70);
-//        tree.insert(80);
-
-
-        ////test case 1
-//        tree.insert(6);
-//        tree.insert(12);
-//        tree.insert(5);
-//        tree.insert(11);
-//        tree.insert(15);
-//        tree.insert(13);
-//        tree.insert(14);
-//        tree.insert(16);
-
-////testcase 2
-//            tree.insert(10);
-//            tree.insert(8);
-//            tree.insert(13);
-//            tree.insert(6);
-//            tree.insert(7);
-
-
-        ////test case 3
-        tree.insertRB(10);
-        tree.insertRB(13);
-        tree.insertRB(8);
-        tree.insertRB(6);
-        tree.insertRB(7);
-        tree.insertRB(9);
-        tree.insertRB(11);
-        tree.insertRB(12);
-        tree.insertRB(16);
-        tree.insertRB(18);
-
-
-
-        //tree.remove(8);
-
-//        tree.insertRB(40);
-        for(int i = 0; i < tree.versionRepository.size(); i++) {
-            System.out.println("Tree["+i+"]: " + (tree.treeRepository.get(i)));
-            //tree.visitedNodes.forEach((System.out::println));
-        }
-      //  System.out.println("ORIGINAL TREE : " +tree);
-
-
-    }
+//        tree.insertRB(6);
+//        tree.insertRB(7);
+//        tree.insertRB(9);
+//        tree.insertRB(11);
+//        tree.insertRB(12);
+//        tree.insertRB(16);
+//        tree.insertRB(18);
+//
+//
+//
+//        //tree.remove(8);
+//
+////        tree.insertRB(40);
+//        for(int i = 0; i < tree.versionRepository.size(); i++) {
+//            System.out.println("Tree["+i+"]: " + (tree.treeRepository.get(i)));
+//            //tree.visitedNodes.forEach((System.out::println));
+//        }
+//      //  System.out.println("ORIGINAL TREE : " +tree);
+//
+//
+//    }
 
 }
