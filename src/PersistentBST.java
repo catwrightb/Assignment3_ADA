@@ -75,44 +75,44 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
     }
 
 
-//    public static void main(String[] args) {  // create the binary search tree
-//        PersistentBST<String> tree = new PersistentBST<>();
-//        // build the tree
-//        System.out.println(tree.getCurrentVersionNo());
-//        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
-//        System.out.println(tree.visitedNodes);
-//        tree.add("cow");
-//        tree.remove("cow");
-//        System.out.println(tree.getCurrentVersionNo());
-//        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
-//        System.out.println(tree.visitedNodes);
-//        tree.add("fly");
-//        System.out.println(tree.visitedNodes);
-//        System.out.println(tree.getCurrentVersionNo());
-//        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
-//        tree.add("dog");
-//        System.out.println(tree.visitedNodes);
-//        tree.add("bat");
-//        System.out.println(tree.visitedNodes);
-//        tree.add("fox");
-//        System.out.println(tree.visitedNodes);
-//        tree.add("cat");
-//        System.out.println(tree.visitedNodes);
-//        tree.add("eel");
-//        System.out.println(tree.visitedNodes);
-//        tree.add("ant");
-//        System.out.println(tree.visitedNodes);
-//        System.out.println("Original Tree: " + tree);
-//        tree.remove("owl");
-//        tree.remove("cow");
-//        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
-//        tree.add("owl");
-//        System.out.println("Modified Tree: " + tree);
-//        System.out.println();
-//
-//        for(int i = 0; i < tree.versionRepository.size(); i++) {
-//            System.out.println("Tree["+i+"]: " + TreeBuilder.visualise(tree.versionRepository.get(i)));
-//            //tree.visitedNodes.forEach((System.out::println));
-//        }
-//    }
+    public static void main(String[] args) {  // create the binary search tree
+        PersistentBST<String> tree = new PersistentBST<>();
+        // build the tree
+        System.out.println(tree.getCurrentVersionNo());
+        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
+        System.out.println(tree.visitedNodes);
+        tree.add("cow");
+        tree.remove("cow");
+        System.out.println(tree.getCurrentVersionNo());
+        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
+        System.out.println(tree.visitedNodes);
+        tree.add("fly");
+        System.out.println(tree.visitedNodes);
+        System.out.println(tree.getCurrentVersionNo());
+        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
+        tree.add("dog");
+        System.out.println(tree.visitedNodes);
+        tree.add("bat");
+        System.out.println(tree.visitedNodes);
+        tree.add("fox");
+        System.out.println(tree.visitedNodes);
+        tree.add("cat");
+        System.out.println(tree.visitedNodes);
+        tree.add("eel");
+        System.out.println(tree.visitedNodes);
+        tree.add("ant");
+        System.out.println(tree.visitedNodes);
+        System.out.println("Original Tree: " + tree);
+        tree.remove("owl");
+        tree.remove("cow");
+        System.out.println(tree.getBranch(tree.getCurrentVersionNo()));
+        tree.add("owl");
+        System.out.println("Modified Tree: " + tree);
+        System.out.println();
+
+        for(int i = 0; i < tree.versionRepository.size(); i++) {
+            System.out.println("Tree["+i+"]: " + TreeBuilder.visualise(tree.versionRepository.get(i)));
+            //tree.visitedNodes.forEach((System.out::println));
+        }
+    }
 }
