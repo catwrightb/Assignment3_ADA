@@ -4,35 +4,32 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- * Almost Complete GUI - just need to finish the code when pressing the buttons and updating
- * the number of nodes in the tree. WIll only build once Archive.ExpNode subclasses are made
+ * GUI was an adaptation, taken from Question 6 of the Data
+ * Structures & Algorithms course Assignment 1, Semester 1, 2021.
  *
- * @author sehall
+ * Reference
+ * -----------------------------------------------------------------------
+ * Hall, S. (2021). Data structures & algorithms assignment 1 : question 6. AUT BCIS course.
  */
-public class TreeGUI extends JPanel implements ActionListener, KeyListener, ItemListener {
+public class TreeGUI extends JPanel implements ActionListener, KeyListener {
 
-    private final JButton addNodeButton, removeNodeButton;
-    private JButton clearButton;
-
-    private DrawPanel drawPanel;
-    private Node<?> localRoot; //root node
-    //private Node<?> currPersistentBSTRoot; //USE THIS root node
-    //private RedBlackNode<?> rbtroot; //USE THIS root node
-    private int numberNodes = 0;
-    private JTextField addNodeTextField, removeNodeTextField;
     public static int PANEL_H = 700;
     public static int PANEL_W = 900;
     private final int BOX_SIZE = 40;
-    private JLabel nodeCounterLabel;
 
+    private JLabel versionLabel, treeTypeLabel, nodeCounterLabel;
+    private int numberNodes = 0;
     private JComboBox<String> treeTypeDropDown;
     private String treeType;
-
     private JComboBox<Integer> versionNoDropDown; // Added
     private int versionSelected;
 
-    private ArrayList<Integer> inputItemList = new ArrayList<>();
+    private DrawPanel drawPanel;
+    private JTextField addNodeTextField, removeNodeTextField;
+    private JButton addNodeButton, removeNodeButton;
+    private JButton clearButton;
 
+    private Node<?> localRoot; //root node
     protected BinarySearchTree<Integer> binarySearchTree = new BinarySearchTree<>();
     protected PersistentBST<Integer> persistentBST = new PersistentBST<>();
     protected RedBlackTreeAlt<Integer> redBlackTree = new RedBlackTreeAlt<>();
@@ -44,10 +41,6 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         } catch(Exception ignored) {
         }
         localRoot = null;
-
-//        BinarySearchTree<Integer> binarySearchTree = new BinarySearchTree<>(0);
-//        PersistentBST<Integer> persistentBST = new PersistentBST<>();
-//        RedBlackTree redBlackTree = new RedBlackTree();
 
         super.setPreferredSize(new Dimension(PANEL_W, PANEL_H + 30));
         JPanel buttonPanel = new JPanel();
@@ -77,11 +70,12 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         buttonPanel.add(removeNodeButton);
         buttonPanel.add(clearButton);
 
+        treeTypeLabel = new JLabel("Type: ");
         String[] types = {"-", "Binary Search Tree", "Persistent", "Red and Black Tree"};
         treeTypeDropDown = new JComboBox<>(types);
         treeTypeDropDown.addActionListener(this);
-        //treeTypeDropDown.addItemListener((event) -> );
 
+        versionLabel = new JLabel("Ver: ");
         versionNoDropDown = new JComboBox<>();
         versionNoDropDown.addActionListener(this);
         versionNoDropDown.setEnabled(false);
@@ -89,8 +83,10 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         nodeCounterLabel = new JLabel("Number of Nodes: " + numberNodes);
 
         JPanel topPanel = new JPanel();
-        topPanel.add(versionNoDropDown, BorderLayout.NORTH);
+        topPanel.add(treeTypeLabel, BorderLayout.NORTH);
         topPanel.add(treeTypeDropDown, BorderLayout.NORTH);
+        topPanel.add(versionLabel, BorderLayout.NORTH);
+        topPanel.add(versionNoDropDown, BorderLayout.NORTH);
         topPanel.add(nodeCounterLabel, BorderLayout.SOUTH);
 
         super.add(drawPanel, BorderLayout.CENTER);
@@ -110,20 +106,22 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                     case "Binary Search Tree":
                         // Add parsed user input(s) into BST.
                         Arrays.stream(userInput).forEach(element -> binarySearchTree.add(Integer.parseInt(element)));
-                        //System.out.println(binarySearchTree);
                         localRoot = binarySearchTree.root;
+//                        System.out.println(binarySearchTree);
                         break;
                     case "Persistent":
                         // Add parsed user input(s) into persistentBST.
                         Arrays.stream(userInput).forEach(element -> persistentBST.add(Integer.parseInt(element)));
-                        //System.out.println(persistentBST);
                         localRoot = persistentBST.root;
+                        versionSelected = persistentBST.getCurrentVersionNo();
+//                        System.out.println(persistentBST);
                         break;
                     case "Red and Black Tree":
                         // Add parsed user input(s) into RBT.
                         Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
-                        //System.out.println(redBlackTree);
                         localRoot = redBlackTree.root;
+                        versionSelected = redBlackTree.getCurrentVersionNo();
+//                        System.out.println(redBlackTree);
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -172,15 +170,16 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         case "Binary Search Tree":
                             // Remove parsed user input(s) from BST.
                             Arrays.stream(userInput).forEach(element -> binarySearchTree.remove(Integer.parseInt(element)));
-                            //System.out.println(binarySearchTree);
                             localRoot = binarySearchTree.root;
+//                            System.out.println(binarySearchTree);
                             break;
                         case "Persistent":
                             // Add parsed user input(s) into persistentBST.
                             if (version == versionSelected){
                                 Arrays.stream(userInput).forEach(element -> persistentBST.remove(Integer.parseInt(element)));
-                                //System.out.println(persistentBST);
                                 localRoot = persistentBST.root;
+                                versionSelected = persistentBST.getCurrentVersionNo();
+//                                System.out.println(persistentBST);
                             }
                             else {
                                 JOptionPane.showMessageDialog(this, "Please only remove from the latest branch!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -191,12 +190,12 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                             // Add parsed user input(s) into RBT.
                             if (version == versionSelected){
                                 Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
-                                //System.out.println(redBlackTree);
                                 localRoot = redBlackTree.root;
+                                versionSelected = redBlackTree.getCurrentVersionNo();
+//                                System.out.println(redBlackTree);
                             }
                             else {
                                 JOptionPane.showMessageDialog(this, "Please only remove from the latest branch!", "Error", JOptionPane.ERROR_MESSAGE);
-
                             }
 
                             break;
@@ -211,10 +210,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                 else {
                     JOptionPane.showMessageDialog(this, "This value is not present.", "Error", JOptionPane.ERROR_MESSAGE);
                     removeNodeTextField.setText("");
-
                 }
-
-
             }
 
         }
@@ -234,11 +230,13 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                     persistentBST.clear();
                     //System.out.println(persistentBST);
                     localRoot = persistentBST.getRoot();
+                    versionSelected = persistentBST.getCurrentVersionNo();
                     break;
                 case "Red and Black Tree":
                     redBlackTree.clear();
                     //System.out.println(redBlackTree);
                     localRoot = redBlackTree.getRoot();
+                    versionSelected = redBlackTree.getCurrentVersionNo();
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -275,12 +273,12 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
             case "Persistent":
                 versionNoDropDown.setEnabled(true);
                 versionNoDropDown.setModel(new DefaultComboBoxModel<>(persistentBST.getVersionNos()));
-                //versionNoDropDown.setSelectedIndex(persistentBST.getCurrentVersionNo());
+                versionNoDropDown.setSelectedIndex(versionSelected);
                 break;
             case "Red and Black Tree":
                 versionNoDropDown.setEnabled(true);
                 versionNoDropDown.setModel(new DefaultComboBoxModel<>(redBlackTree.getVersionNos()));
-                //versionNoDropDown.setSelectedIndex(redBlackTree.getCurrentVersionNo());
+                versionNoDropDown.setSelectedIndex(versionSelected);
                 break;
             default:
                 versionNoDropDown.setEnabled(false);
@@ -292,17 +290,17 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         if(event.getSource() == treeTypeDropDown) {
             treeType = Objects.requireNonNull(treeTypeDropDown.getSelectedItem()).toString();
 
-            //System.out.println(treeType);
-            inputItemList.clear();
             switch(treeType) {
                 case "Binary Search Tree":
                     localRoot = binarySearchTree.getRoot();
                     break;
                 case "Persistent":
                     localRoot = persistentBST.getRoot();
+                    versionSelected = persistentBST.getCurrentVersionNo();
                     break;
                 case "Red and Black Tree":
                     localRoot = redBlackTree.getRoot();
+                    versionSelected = redBlackTree.getCurrentVersionNo();
                     break;
                 default:
                     localRoot = null;
@@ -310,7 +308,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
             toggleVersionComboBox();
         } else if(event.getSource() == versionNoDropDown) {
             versionSelected = versionNoDropDown.getSelectedIndex();
-            //System.out.println(versionSelected);
+//            System.out.println(versionSelected);
             switch(treeType) {
                 case "Persistent":
                     localRoot = persistentBST.getBranch(versionSelected);
@@ -319,12 +317,11 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                     localRoot = redBlackTree.getBranch(versionSelected);
                     break;
             }
+            versionNoDropDown.setSelectedIndex(versionSelected);
         }
-        //toggleVersionComboBox();
 
+        nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
         drawPanel.repaint();
-        //nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
-        //nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot)); //count from root LVR
     }
 
     @Override
@@ -344,17 +341,14 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
     @Override
     public void keyReleased(KeyEvent e) {    }
 
-    static boolean isNumber(String s) {
+     static boolean isNumber(String s) {
         for(int i = 0; i < s.length(); i++)
             if(!Character.isDigit(s.charAt(i)))
-                return false;
+                if(s.charAt(i) != '-') {
+                    return false;
+                }
 
         return true;
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-
     }
 
     private class DrawPanel extends JPanel {
