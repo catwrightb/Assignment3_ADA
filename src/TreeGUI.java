@@ -4,12 +4,13 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- * GUI was an adaptation, taken from Question 6 of the Data
- * Structures & Algorithms course Assignment 1, Semester 1, 2021.
+ * This GUI class is an adaptation of Assignment 1's Question 6,
+ * from 2021's Semester 1's Data Structures & Algorithms course.
  *
  * Reference
  * -----------------------------------------------------------------------
- * Hall, S. (2021). Data structures & algorithms assignment 1 : question 6. AUT BCIS course.
+ * Hall, S. (2021). Data structures & algorithms assignment 1 : question 6.
+ *      AUT BCIS course. ExpressionTreeGUI.java
  */
 public class TreeGUI extends JPanel implements ActionListener, KeyListener {
 
