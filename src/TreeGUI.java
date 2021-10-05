@@ -119,17 +119,17 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         System.out.println(persistentBST);
                         localRoot = persistentBST.root;
                         break;
-//                    case "Red and Black Tree":
-//                        // Add parsed user input(s) into RBT.
-//                        Arrays.stream(userInput).forEach(element -> redBlackTree.insert(Integer.parseInt(element)));
-//                        System.out.println(redBlackTree);
-//                        localRoot = redBlackTree.getRoot();
-//                        break;
+                    case "Red and Black Tree":
+                        // Add parsed user input(s) into RBT.
+                        Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
+                        System.out.println(redBlackTree);
+                        localRoot = redBlackTree.getRoot();
+                        break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 addNodeTextField.setText("");
-                nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
+                nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
                 drawPanel.repaint();
                 toggleVersionComboBox();
             }
@@ -156,17 +156,17 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         System.out.println(persistentBST);
                         localRoot = persistentBST.root;
                         break;
-//                    case "Red and Black Tree":
-//                        // Add parsed user input(s) into RBT.
-//                        //Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
-//                        System.out.println(redBlackTree);
-//                        rbtroot = redBlackTree.getRoot();
-//                        break;
+                    case "Red and Black Tree":
+                        // Add parsed user input(s) into RBT.
+                        //Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
+                        System.out.println(redBlackTree);
+                        localRoot = redBlackTree.getRoot();
+                        break;
                     default:
                         JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 removeNodeTextField.setText("");
-                nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
+                nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
                 drawPanel.repaint();
                 toggleVersionComboBox();
             }
@@ -188,16 +188,16 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                     System.out.println(persistentBST);
                     localRoot = persistentBST.getRoot();
                     break;
-//                case "Red and Black Tree":
-//                    redBlackTree.clear();
-//                    System.out.println(redBlackTree);
-//                    localRoot = redBlackTree.getRoot();
-//                    break;
+                case "Red and Black Tree":
+                    redBlackTree.clear();
+                    System.out.println(redBlackTree);
+                    localRoot = redBlackTree.getRoot();
+                    break;
                 default:
                     JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
             }
             numberNodes = 0;
-            nodeCounterLabel.setText("Number of Nodes: " + numberNodes);
+            nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
             drawPanel.repaint();
             toggleVersionComboBox();
         }
@@ -210,11 +210,11 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                 versionNoDropDown.setModel(new DefaultComboBoxModel<>(persistentBST.getVersionNos()));
                 //versionNoDropDown.setSelectedIndex(persistentBST.getCurrentVersionNo());
                 break;
-//            case "Red and Black Tree":
-//                versionNoDropDown.setEnabled(true);
-//                versionNoDropDown.setModel(new DefaultComboBoxModel<>(redBlackTree.getVersionNos()));
-//                versionNoDropDown.setSelectedIndex(redBlackTree.getCurrentVersionNo());
-//                break;
+            case "Red and Black Tree":
+                versionNoDropDown.setEnabled(true);
+                versionNoDropDown.setModel(new DefaultComboBoxModel<>(redBlackTree.getVersionNos()));
+                //versionNoDropDown.setSelectedIndex(redBlackTree.getCurrentVersionNo());
+                break;
             default:
                 versionNoDropDown.setEnabled(false);
         }
@@ -234,9 +234,9 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                 case "Persistent":
                     localRoot = persistentBST.getRoot();
                     break;
-//                case "Red and Black Tree":
-//                    localRoot = redBlackTree.getRoot();
-//                    break;
+                case "Red and Black Tree":
+                    localRoot = redBlackTree.getRoot();
+                    break;
                 default:
                     localRoot = null;
             }
@@ -248,9 +248,9 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                 case "Persistent":
                     localRoot = persistentBST.getBranch(versionSelected);
                     break;
-//                case "Red and Black Tree":
-//                    localRoot = redBlackTree.getBranch(versionSelected);
-//                    break;
+                case "Red and Black Tree":
+                    localRoot = redBlackTree.getBranch(versionSelected);
+                    break;
             }
         }
         //toggleVersionComboBox();
@@ -303,7 +303,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
             super.paintComponent(g);
 
             if(localRoot != null && treeType != null && localRoot.item != null) {
-                numberNodes = TreeBuilder.drawTree(g, localRoot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE);
+                numberNodes = TreeBuilder.drawTree(g, localRoot, BOX_SIZE, 0, 0, new HashMap<>(), BOX_SIZE, treeType);
             }
         }
     }

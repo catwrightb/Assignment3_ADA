@@ -1,3 +1,4 @@
+
 /* a class for binary tree nodes
  * @author	Biagioni, Edoardo
  * @assignment	lecture 17
@@ -18,7 +19,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public BinarySearchTree(T value) {
-        root = new Node<>(value);
+        root = new Node<T>(value);
     }
 
     public BinarySearchTree(Node<T> newRoot) {
@@ -31,7 +32,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public Node<T> getRoot() {
-        return this.root;
+        return root;
     }
 
     /**
@@ -85,6 +86,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         //nodeTraversed(root);
         Node<T> moddedRoot = insert(value, root);
         postModification(moddedRoot);
+
     }
 
     /**
@@ -97,18 +99,18 @@ public class BinarySearchTree<T extends Comparable<T>> {
     protected Node<T> insert(T value, Node<T> node) {
         Node<T> updateNode;
         if(node == null || node.item == null) { // If node is null, or it's field is empty... (base case)
-            updateNode = new Node<>(value);
-//            nodeTraversed(updateNode);
+            updateNode = new Node<T>(value);
+            nodeTraversed(updateNode);
         } else {
             updateNode = preModification(node); // Calls hook method to process node.
-//            nodeTraversed(updateNode);
-            if(value.compareTo(node.item) < 0) {    // Value smaller --> add to left subtree
-                //nodeTraversed(updateNode.leftChild); // Hook method to track paths taken.
+            nodeTraversed(updateNode);
+            if(value.compareTo(node.item) < 0) {    // add to left subtree
+                //nodeTraversed(updateNode.left); // Hook method to track paths taken.
                 updateNode.left = insert(value, node.left); // Recursively calls the insert method as it traverses down the subtree.
-            } else if(value.compareTo(node.item) > 0) {  // Value larger --> add to right subtree
-                //nodeTraversed(updateNode.rightChild); // Hook method to track paths taken.
+            } else if(value.compareTo(node.item) > 0) {  // add to right subtree
+                //nodeTraversed(updateNode.right); // Hook method to track paths taken.
                 updateNode.right = insert(value, node.right); // Recursively calls the insert method as it traverses down the subtree.
-            } // Value already exists in tree --> Ignore.
+            }
         }
         return updateNode;
     }
@@ -120,10 +122,20 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param key key/value to be removed from the tree/sub-tree.
      */
     public void remove(T key) {
-        //nodeTraversed(root);
+        nodeTraversed(root);
         Node<T> moddedRoot = remove(key, root);
         postModification(moddedRoot);
     }
+
+    public boolean isEmpty() {
+        if (root.item == null ){
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    } //end of isEmpty
 
     /**
      * Remove a value from the tree if it exists. Saves the paths it has
@@ -139,7 +151,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
 
         Node<T> updateNode = preModification(node);  // Calls hook method to process node.
-        nodeTraversed(updateNode); // Record path.
 
         if(value.compareTo(node.item) == 0) { // remove this node
             if(node.left == null) { // replace this node with right child
@@ -149,16 +160,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
             } else {    // If there are two children...
                 // Replace the value of the removal node with its predecessor.
                 updateNode.item = getRightmost(node.left);
-                //nodeTraversed(updateNode.leftChild); // Record path.
+                nodeTraversed(updateNode.left); // Record path.
                 // Recursively remove the predecessor node (found in the left subtree of the removal node).
                 updateNode.left = remove(updateNode.item, node.left);
             }
         } else {    // remove from left or right subtree
             if(value.compareTo(node.item) < 0) {   // remove from left subtree
-                //nodeTraversed(updateNode.leftChild); // Record path.
+                nodeTraversed(updateNode.left); // Record path.
                 updateNode.left = remove(value, node.left);
             } else if(value.compareTo(node.item) > 0) {  // remove from right subtree
-                //nodeTraversed(updateNode.rightChild); // Record path.
+                nodeTraversed(updateNode.right); // Record path.
                 updateNode.right = remove(value, node.right);
             }
         }
@@ -206,7 +217,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if(node == null || node.item == null) {
             return "";
         }
-        return node.item + "(" + toString(node.left) + ", " +
+        return node.item.toString() + "(" + toString(node.left) + ", " +
                 toString(node.right) + ")";
     }
 
@@ -248,8 +259,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     // hooker methods
-    protected void nodeFinished(Node<T> node) {
+    protected void rotate(T node) {
         //
+    }
+
+    protected void insertRB(Node<T> newNode) {
+
     }
 
     // Inner class that represents an Iterator for a binary tree
@@ -258,7 +273,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         private Iterator<T> iterator;
 
         public TreeIterator(Node<T> rootNode) {  // puts the elements in a linked list using inorder traversal
-            list = new LinkedList<>();
+            list = new LinkedList<T>();
             traverseInOrder(rootNode);
             iterator = list.iterator();
         }
@@ -286,28 +301,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
     }
 
-    public static void main(String[] args) {  // create the binary search tree
-        BinarySearchTree<String> tree = new BinarySearchTree<>();
-        // build the tree
-        tree.add("cow");
-        tree.add("fly");
-        tree.add("dog");
-        tree.add("bat");
-        tree.add("fox");
-        tree.add("cat");
-        tree.add("eel");
-        tree.add("ant");
-        System.out.println("Original Tree: " + TreeBuilder.visualise(tree.root));
-        tree.remove("owl");
-        tree.remove("cow");
-        tree.add("owl");
-        System.out.println("Modified Tree: " + TreeBuilder.visualise(tree.root));
-    }
+
+    static int drawBST(Graphics g, Node current,
+                       int x, int level, int nodeCount, Map<Node, Point> map, int BOX_SIZE) {
 
 
-    static int drawBST(Graphics g, Node<?> current, int x, int level, int nodeCount, Map<Node<?>, Point> map, int BOX_SIZE) {
-
-        if(current.left != null) {
+        if (current.left != null) {
             nodeCount = drawBST(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
         }
 
@@ -316,25 +315,19 @@ public class BinarySearchTree<T extends Comparable<T>> {
         nodeCount++;
         map.put(current, new Point(currentX, currentY));
 
-        if(current.right != null) {
+        if (current.right != null) {
             nodeCount = drawBST(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
         }
+        g.setColor(Color.YELLOW);
 
-        g.setColor(Color.red);
-        if(current.left != null) {
+        if (current.left != null) {
             Point leftPoint = map.get(current.left);
             g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
         }
-        if(current.right != null) {
+        if (current.right != null) {
             Point rightPoint = map.get(current.right);
             g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
 
-        }
-
-        if(current instanceof RedBlackNode) {
-            g.setColor(((RedBlackNode<?>) current).getColor());
-        } else {
-            g.setColor(Color.WHITE);
         }
 
         Point currentPoint = map.get(current);
@@ -343,7 +336,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
         g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
         Font f = new Font("courier new", Font.BOLD, 16);
         g.setFont(f);
-        g.drawString(current.toString(), currentPoint.x - 3, currentPoint.y);
+        g.drawString(current.toString(), currentPoint.x-3, currentPoint.y);
         return nodeCount;
+
     }
 }

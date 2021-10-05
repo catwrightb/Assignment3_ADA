@@ -38,9 +38,9 @@ public class TreeBuilder {
     /*
      * draws the Red black tree
      * */
-    public static int drawTree(Graphics g, Node<?> current, int x, int level, int nodeCount, Map<Node<?>, Point> map, int BOX_SIZE) {
+    public static int drawTree(Graphics g, Node<?> current, int x, int level, int nodeCount, Map<Node<?>, Point> map, int BOX_SIZE, String treeType) {
         if (current.left != null) {
-            nodeCount = drawTree(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE);
+            nodeCount = drawTree(g, current.left, x, level + 1, nodeCount, map, BOX_SIZE, treeType);
         }
 
         int currentX = x + nodeCount * BOX_SIZE;
@@ -49,10 +49,19 @@ public class TreeBuilder {
         map.put(current, new Point(currentX, currentY));
 
         if (current.right != null) {
-            nodeCount = drawTree(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE);
+            nodeCount = drawTree(g, current.right, x, level + 1, nodeCount, map, BOX_SIZE, treeType);
         }
 
-        g.setColor(Color.RED);
+        if (treeType.equals("Red and Black Tree")){
+            g.setColor(current.getColor());
+        }
+        else if(treeType.equals("Persistent")){
+            g.setColor(Color.BLUE);
+        }
+        else {
+            g.setColor(Color.WHITE);
+        }
+
         if (current.left != null) {
             Point leftPoint = map.get(current.left);
             g.drawLine(currentX, currentY, leftPoint.x, leftPoint.y - BOX_SIZE / 2);
@@ -63,20 +72,11 @@ public class TreeBuilder {
             g.drawLine(currentX, currentY, rightPoint.x, rightPoint.y - BOX_SIZE / 2);
         }
 
-        if (current instanceof RedBlackNode) {
-            g.setColor(((RedBlackNode<?>) current).getColor());
-        } else {
-            g.setColor(Color.WHITE);
-        }
 
         Point currentPoint = map.get(current);
         g.fillRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
 
-        if(g.getColor().equals(Color.BLACK)) {
-            g.setColor(Color.WHITE);
-        } else {
-            g.setColor(Color.BLACK);
-        }
+        g.setColor(Color.ORANGE);
 
         g.drawRect(currentPoint.x - BOX_SIZE / 2, currentPoint.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE);
         g.setFont(new Font("courier new", Font.BOLD, 16));
