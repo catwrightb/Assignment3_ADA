@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- * This GUI class is an adaptation of Assignment 1's Question 6,
+ * This GUI class is an adaptation of Assignment 1's Question 6 problem,
  * from 2021's Semester 1's Data Structures & Algorithms course.
  *
  * Reference
@@ -345,7 +345,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener {
      static boolean isNumber(String s) {
         for(int i = 0; i < s.length(); i++)
             if(!Character.isDigit(s.charAt(i)))
-                if(s.charAt(i) != '-') {
+                if(s.charAt(i) != '-') { // Accept negative symbols too.
                     return false;
                 }
 
