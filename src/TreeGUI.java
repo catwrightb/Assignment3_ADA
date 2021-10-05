@@ -110,19 +110,19 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                     case "Binary Search Tree":
                         // Add parsed user input(s) into BST.
                         Arrays.stream(userInput).forEach(element -> binarySearchTree.add(Integer.parseInt(element)));
-                        System.out.println(binarySearchTree);
+                        //System.out.println(binarySearchTree);
                         localRoot = binarySearchTree.root;
                         break;
                     case "Persistent":
                         // Add parsed user input(s) into persistentBST.
                         Arrays.stream(userInput).forEach(element -> persistentBST.add(Integer.parseInt(element)));
-                        System.out.println(persistentBST);
+                        //System.out.println(persistentBST);
                         localRoot = persistentBST.root;
                         break;
                     case "Red and Black Tree":
                         // Add parsed user input(s) into RBT.
                         Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
-                        System.out.println(redBlackTree);
+                        //System.out.println(redBlackTree);
                         localRoot = redBlackTree.root;
                         break;
                     default:
@@ -172,14 +172,14 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                         case "Binary Search Tree":
                             // Remove parsed user input(s) from BST.
                             Arrays.stream(userInput).forEach(element -> binarySearchTree.remove(Integer.parseInt(element)));
-                            System.out.println(binarySearchTree);
+                            //System.out.println(binarySearchTree);
                             localRoot = binarySearchTree.root;
                             break;
                         case "Persistent":
                             // Add parsed user input(s) into persistentBST.
                             if (version == versionSelected){
                                 Arrays.stream(userInput).forEach(element -> persistentBST.remove(Integer.parseInt(element)));
-                                System.out.println(persistentBST);
+                                //System.out.println(persistentBST);
                                 localRoot = persistentBST.root;
                             }
                             else {
@@ -191,7 +191,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
                             // Add parsed user input(s) into RBT.
                             if (version == versionSelected){
                                 Arrays.stream(userInput).forEach(element -> redBlackTree.remove(Integer.parseInt(element)));
-                                System.out.println(redBlackTree);
+                                //System.out.println(redBlackTree);
                                 localRoot = redBlackTree.root;
                             }
                             else {
@@ -227,17 +227,17 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
             switch(treeType) {
                 case "Binary Search Tree":
                     binarySearchTree.clear();
-                    System.out.println(binarySearchTree);
+                    //System.out.println(binarySearchTree);
                     localRoot = binarySearchTree.getRoot();
                     break;
                 case "Persistent":
                     persistentBST.clear();
-                    System.out.println(persistentBST);
+                    //System.out.println(persistentBST);
                     localRoot = persistentBST.getRoot();
                     break;
                 case "Red and Black Tree":
                     redBlackTree.clear();
-                    System.out.println(redBlackTree);
+                    //System.out.println(redBlackTree);
                     localRoot = redBlackTree.getRoot();
                     break;
                 default:
@@ -292,7 +292,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
         if(event.getSource() == treeTypeDropDown) {
             treeType = Objects.requireNonNull(treeTypeDropDown.getSelectedItem()).toString();
 
-            System.out.println(treeType);
+            //System.out.println(treeType);
             inputItemList.clear();
             switch(treeType) {
                 case "Binary Search Tree":
@@ -310,7 +310,7 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener, Item
             toggleVersionComboBox();
         } else if(event.getSource() == versionNoDropDown) {
             versionSelected = versionNoDropDown.getSelectedIndex();
-            System.out.println(versionSelected);
+            //System.out.println(versionSelected);
             switch(treeType) {
                 case "Persistent":
                     localRoot = persistentBST.getBranch(versionSelected);
