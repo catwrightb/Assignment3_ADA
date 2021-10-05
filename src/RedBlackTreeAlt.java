@@ -1,27 +1,20 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
+import java.util.List;
 
 public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T> {
 
 
-    protected Node<T> root;
     public ArrayList<Node<T>> rblist = new ArrayList<Node<T>>();
     public ArrayList<Node<T>> testlist = new ArrayList<Node<T>>();
-    protected ArrayList<Node<T>> versionRepository = new ArrayList<>();
-    protected ArrayList<Node<T>> treeRepository = new ArrayList<>();
+//    protected ArrayList<Node<T>> versionRepository = new ArrayList<>();
+//    protected ArrayList<Node<T>> treeRepository = new ArrayList<>();
+//    protected Stack<Node<T>> visitedNodes;
+    protected java.util.List<Node<T>> versionRepository;
+    protected List<BinarySearchTree<T>> treeRepository;
     protected Stack<Node<T>> visitedNodes;
-    int numberOfNodes;
-//
-//    public void addToMemory(RedBlackTree oldTree){
-//        RedBlackTree tree = new RedBlackTree();
-//        tree = oldTree;
-//        root = tree.getRoot();
-//        //treeRepository.add(tree);
-//        versionRepository.add(tree.root);
-//
-//    }
+    Stack<Node<T>> test = new Stack<>();
+
 
 
 
@@ -34,11 +27,72 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         return versionRepository.get(versionNo);
     }
 
-    public RedBlackTreeAlt() {
-        root = null;
+
+    public RedBlackTreeAlt()
+    {
+        super();
+        this.versionRepository = new ArrayList<>();
+        this.versionRepository.add(this.root);
+        this.treeRepository = new ArrayList<>();
+        this.treeRepository.add(new BinarySearchTree<>(this.root));
+        this.visitedNodes = new Stack<>();
+    }
+
+    public void printPostorder(Node<T> node)
+    {
+        if (node == null){
+            return;
+        }
+
+        if (node.left != null){
+            printPostorder((node.left));
+        }
+
+        if (node.right != null){
+            printPostorder((node.right));
+        }
+
+        // now deal with the node
+        Node<T> newNode = preModification(node);
+
+
+        //if current node has 2 children
+        if (!test.isEmpty() && newNode.right != null){
+            if (test.peek().item == newNode.right.item ){
+                newNode.right = test.pop();
+            }
+
+        }
+
+        if (!test.isEmpty() && newNode.left != null){
+            if (test.peek().item == newNode.left.item){
+                newNode.left = test.pop();
+            }
+
+        }
+
+
+
+        if (newNode.item == root.item){
+            root = newNode;
+
+        }
+        test.add(newNode);
 
     }
 
+    protected void helper(int i){
+        printPostorder(root);
+        if (i == 2){
+            postModification(root);
+        }
+        else {
+           // this.root = root; // Update the current root node.
+            this.visitedNodes.clear();
+            this.test.clear();
+        }
+
+    }
 
 
     /****************************************************
@@ -46,10 +100,11 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      *
      * insert a red node
      ***************************************************/
-    public void insertRB(T data) {
-        Node<T> newNode = new Node<T>(data);
-        nodeTraversed(newNode);
-        insertRB(newNode);
+
+    protected void insertRB(T val) {
+        Node<T> newNode = new Node<>(val, "RED");
+        //nodeTraversed(newNode);
+        insertRBT(newNode);
     }
 
 
@@ -58,22 +113,24 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      *
      * a helper method that inserts the given node
      ***************************************************/
-
-    public void insertRB(Node<T> newNode) {
-        if (isEmpty()) {
+    public void insertRBT(Node<T> newNode) {
+        if (isEmpty() || root.item == newNode.item) {
             root = newNode;
+            helper(2);
 
         } else {
             //if it is not empty we must perform two steps:
-            //Step 1: BST insert to put the node in the correct spot.
-
-            bstInsert(newNode);
+            //Step 1: Find branch
+            helper(1);
+            findBranch(newNode);
 
             //Step 2: fixUp
             fixUp(newNode);
-
+            helper(2);
         }
         root.color = "BLACK";
+
+       // postModification(modified);
     } //end of insert
 
     /****************************************************
@@ -82,7 +139,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      * A regular binary search tree insert.
      * Finds the correct placement off the nodes data and inserts.
      ***************************************************/
-    public void bstInsert(Node<T> newNode) {
+    public void findBranch(Node<T> newNode) {
         rblist.clear();
         Node<T> curr = root;
         Node<T> prev = null;
@@ -227,6 +284,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
             } //end of if-else
         } //end of while
         root.color = "BLACK";
+
     }//end of fixUp
 
 
@@ -298,9 +356,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
     } //end of right rotate
 
-    public boolean isEmpty() {
-        return root == null;
-    } //end of isEmpty
+//    public boolean isEmpty() {
+//        return root == null;
+//    } //end of isEmpty
 
     public void setRoot(Node<T> root) {
         resetTree();
@@ -348,6 +406,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     } //end of getDepth
 
 
+
     public Node<T> findPreviousIndex(Node<T> find){
         Node<T> temp = find;
         if (find != root) {
@@ -372,8 +431,17 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
     @Override
-    protected void nodeFinished(Node node){
-        //
+    protected void postModification(Node<T> modifiedRoot) {
+        this.versionRepository.add(modifiedRoot);
+        this.treeRepository.add(new BinarySearchTree<>(modifiedRoot));
+        this.root = modifiedRoot; // Update the current root node.
+        this.visitedNodes.clear();
+        this.test.clear();
+    }
+
+
+    protected Node<T> preModification(Node<T> node) {
+        return node.deepClone(node); // Pass the reference of the cloned Node back to caller.
     }
 
     /* toString
@@ -404,10 +472,11 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         RedBlackTreeAlt tree2 = new RedBlackTreeAlt();
         this.addToList();
 
-        for (Node<T> node : testlist) {
+        for (int i = 0; i < testlist.size(); i++) {
+            Node<T> node = testlist.get(i);
 
             if (find != node.item) {
-                tree2.insertRB(node.item);
+               tree2.insertRB(node.item);
             }
         }
 
@@ -479,17 +548,17 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         RedBlackTreeAlt tree = new RedBlackTreeAlt();
 
 //TESTCASE
-        tree.insertRB(10);
+//        tree.insertRB(10);
+//        tree.insertRB(5);
+//        tree.insertRB(1);
+//        tree.insertRB(2);
 
-        tree.insertRB(5);
 
-        tree.insertRB(1);
-
-        tree.insertRB(4);
-        tree.insertRB(6);
-        tree.insertRB(8);
-        tree.insertRB(20);
-        tree.insertRB(30);
+//        tree.insertRB(4);
+//        tree.insertRB(6);
+//        tree.insertRB(8);
+//        tree.insertRB(20);
+//        tree.insertRB(30);
        // tree.insert(40);
 
 
@@ -528,23 +597,27 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
         ////test case 3
-//        tree.insert(10);
-//        tree.insert(13);
-//        tree.insert(8);
-//        tree.insert(6);
-//        tree.insert(7);
-//        tree.insert(9);
-//        tree.insert(11);
-//        tree.insert(12);
-//        tree.insert(16);
-//        tree.insert(18);
+        tree.insertRB(10);
+        tree.insertRB(13);
+        tree.insertRB(8);
+        tree.insertRB(6);
+        tree.insertRB(7);
+        tree.insertRB(9);
+        tree.insertRB(11);
+        tree.insertRB(12);
+        tree.insertRB(16);
+        tree.insertRB(18);
 
 
 
         //tree.remove(8);
-        System.out.println("ORIGINAL TREE : " +tree);
-        tree.insertRB(40);
-        System.out.println("ORIGINAL TREE : " +tree);
+
+//        tree.insertRB(40);
+        for(int i = 0; i < tree.versionRepository.size(); i++) {
+            System.out.println("Tree["+i+"]: " + (tree.treeRepository.get(i)));
+            //tree.visitedNodes.forEach((System.out::println));
+        }
+      //  System.out.println("ORIGINAL TREE : " +tree);
 
 
     }

@@ -26,10 +26,23 @@ public class Node<T>  {
         item = value;
         left = l;
         right = r;
+        color = null;
     }
 
     public Node() {
         item = null;
+    }
+
+    public Node(T value, Node<T> l, Node<T> r, String c) {
+        item = value;
+        left = l;
+        right = r;
+        color = c;
+    }
+
+    public Node(T value, String c) {
+        item = value;
+        color = c;
     }
 
     Color getColor() {
@@ -39,6 +52,16 @@ public class Node<T>  {
         return toRet;
     }
 
+
+    /**
+     * Method to deep clone a Node object.
+     * @param node Node instance to be copied.
+     * @return a new instance of the cloned Node with original links and value
+     */
+    public Node<T> deepClone(Node<T> node) {
+        // Deep copies this node and return it to caller.
+        return new Node<T>(node.item, node.left, node.right, node.color);
+    }
 
     @Override
     public String toString()
