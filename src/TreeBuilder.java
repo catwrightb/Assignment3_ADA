@@ -14,7 +14,7 @@ public class TreeBuilder {
         if(node != null && node.item != null) {
             if(node.left != null)
                 output += "" + visualise(node.left);
-            output += "" + node.toString();
+            output += "" + node;
             if(node.right != null)
                 output += "" + visualise(node.right);
         }
@@ -29,7 +29,7 @@ public class TreeBuilder {
      * @return number of nodes in the tree
      */
     public static int countNodes(Node<?> node) {
-        if(node == null)
+        if(node == null || node.item == null)
             return 0;
         else
             return countNodes(node.left) + 1 + countNodes(node.right);
