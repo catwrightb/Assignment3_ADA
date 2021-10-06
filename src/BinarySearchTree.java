@@ -1,25 +1,29 @@
-
-/* a class for binary tree nodes
- * @author	Biagioni, Edoardo
- * @assignment	lecture 17
- * @date	March 12, 2008
- * @inspiration	William Albritton's binary search tree class,
- http://www2.hawaii.edu/~walbritt/ics211/treeBinarySearch/BinarySearchTree.java
- */
-
-import java.awt.*;
 import java.util.*;
 
+/**
+ * Implementation of an abstract data type for Binary Search Trees.
+ * Does not allow duplicate (equal) elements, has methods that allow
+ * this data type to be extended (modular).
+ *
+ * References
+ * --------------------------------------------------------------------------------
+ * Biagioni, E. (March 12, 2008). William Albritton's binary search tree class.
+ *      https://www2.hawaii.edu/~esb/2011fall.ics211/BinarySearchTree.java.html
+ *
+ * Ensor, A. (n.d.). Data structures & algorithms manual, chapter 4. AUT BCIS course.
+ *      BinarySearchTree.java
+ * @param <T>
+ */
 public class BinarySearchTree<T extends Comparable<T>> {
 
-    protected Node<T> root = null;
+    protected Node<T> root;
 
     public BinarySearchTree() {
         root = new Node<>();
     }
 
     public BinarySearchTree(T value) {
-        root = new Node<T>(value);
+        root = new Node<>(value);
     }
 
     public BinarySearchTree(Node<T> newRoot) {
@@ -83,10 +87,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
      * @param value to be inserted
      */
     public void add(T value) {
-        //nodeTraversed(root);
         Node<T> moddedRoot = insert(value, root);
         postModification(moddedRoot);
-
     }
 
     /**
@@ -99,16 +101,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
     protected Node<T> insert(T value, Node<T> node) {
         Node<T> updateNode;
         if(node == null || node.item == null) { // If node is null, or it's field is empty... (base case)
-            updateNode = new Node<T>(value);
+            updateNode = new Node<>(value);
             nodeTraversed(updateNode);
         } else {
             updateNode = preModification(node); // Calls hook method to process node.
             nodeTraversed(updateNode);
             if(value.compareTo(node.item) < 0) {    // add to left subtree
-                //nodeTraversed(updateNode.left); // Hook method to track paths taken.
                 updateNode.left = insert(value, node.left); // Recursively calls the insert method as it traverses down the subtree.
             } else if(value.compareTo(node.item) > 0) {  // add to right subtree
-                //nodeTraversed(updateNode.right); // Hook method to track paths taken.
                 updateNode.right = insert(value, node.right); // Recursively calls the insert method as it traverses down the subtree.
             }
         }
@@ -128,13 +128,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public boolean isEmpty() {
-        if (root.item == null ){
-            return true;
-        }
-        else {
-            return false;
-        }
-
+        return root.item == null;
     } //end of isEmpty
 
     /**
@@ -151,6 +145,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
 
         Node<T> updateNode = preModification(node);  // Calls hook method to process node.
+        nodeTraversed(updateNode); // Record path.
 
         if(value.compareTo(node.item) == 0) { // remove this node
             if(node.left == null) { // replace this node with right child
@@ -160,16 +155,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
             } else {    // If there are two children...
                 // Replace the value of the removal node with its predecessor.
                 updateNode.item = getRightmost(node.left);
-                nodeTraversed(updateNode.left); // Record path.
                 // Recursively remove the predecessor node (found in the left subtree of the removal node).
                 updateNode.left = remove(updateNode.item, node.left);
             }
         } else {    // remove from left or right subtree
             if(value.compareTo(node.item) < 0) {   // remove from left subtree
-                nodeTraversed(updateNode.left); // Record path.
                 updateNode.left = remove(value, node.left);
             } else if(value.compareTo(node.item) > 0) {  // remove from right subtree
-                nodeTraversed(updateNode.right); // Record path.
                 updateNode.right = remove(value, node.right);
             }
         }
@@ -217,7 +209,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if(node == null || node.item == null) {
             return "";
         }
-        return node.item.toString() + "(" + toString(node.left) + ", " +
+        return node.item + "(" + toString(node.left) + ", " +
                 toString(node.right) + ")";
     }
 
@@ -245,7 +237,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
         return node; // Pass the object back to caller unmodified.
     }
 
-
     /**
      * Hook method to handle the node that is passed in after modifications
      * have happened. Here, it just updates the root node to the most recent one.
@@ -258,9 +249,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         this.root = modifiedRoot; // Update the reference to the root node.
     }
 
-
     protected void insertRB(T val) {
-
     }
 
     // Inner class that represents an Iterator for a binary tree
@@ -269,7 +258,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         private Iterator<T> iterator;
 
         public TreeIterator(Node<T> rootNode) {  // puts the elements in a linked list using inorder traversal
-            list = new LinkedList<T>();
+            list = new LinkedList<>();
             traverseInOrder(rootNode);
             iterator = list.iterator();
         }

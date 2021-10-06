@@ -21,8 +21,6 @@ public class PersistentBST<T extends Comparable<T>> extends BinarySearchTree<T> 
         return IntStream.rangeClosed(0, this.getCurrentVersionNo()).boxed().toArray(Integer[]::new);
     }
 
-
-
     /* Gets a saved version of a tree. */
     public Node<T> getBranch(int versionNo) {
         return versionRepository.get(versionNo);
