@@ -10,7 +10,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     protected java.util.List<Node<T>> versionRepository;
     protected List<BinarySearchTree<T>> treeRepository;
     protected Stack<Node<T>> visitedNodes;
-    Stack<Node<T>> test = new Stack<>();
+    Stack<Node<T>> nodeStack = new Stack<>();
 
     public RedBlackTreeAlt() {
         super();
@@ -34,6 +34,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         return versionRepository.get(versionNo);
     }
 
+    /*
+    * helps to sort the tree in a postOrder for the version control
+    *  */
     public void printPostorder(Node<T> node) {
         if(node == null) {
             return;
@@ -52,29 +55,28 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
         //if current node has 2 children
-        if(!test.isEmpty() && newNode.right != null) {
-            if(test.peek().item == newNode.right.item) {
-                newNode.right = test.pop();
+        if(!nodeStack.isEmpty() && newNode.right != null) {
+            if(nodeStack.peek().item == newNode.right.item) {
+                newNode.right = nodeStack.pop();
             }
-
         }
 
-        if(!test.isEmpty() && newNode.left != null) {
-            if(test.peek().item == newNode.left.item) {
-                newNode.left = test.pop();
+        if(!nodeStack.isEmpty() && newNode.left != null) {
+            if(nodeStack.peek().item == newNode.left.item) {
+                newNode.left = nodeStack.pop();
             }
-
         }
 
 
         if(newNode.item == root.item) {
             root = newNode;
-
         }
-        test.add(newNode);
-
+        nodeStack.add(newNode);
     }
 
+    /*
+     * helper to order the tree for version control/modification
+     */
     protected void helperForVersioning(int i) {
         printPostorder(root);
         if(i == 2) {
@@ -82,18 +84,16 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         } else {
             // this.root = root; // Update the current root node.
             this.visitedNodes.clear();
-            this.test.clear();
+            this.nodeStack.clear();
         }
-
     }
 
 
-    /****************************************************
+    /*
      * insert
      *
      * insert a RBT red node
-     ***************************************************/
-    //hook method
+     */
     @Override
     protected void insertRB(T val) {
         Node<T> newNode = new Node<>(val, "RED");
@@ -101,11 +101,11 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }
 
 
-    /****************************************************
+    /*
      * insert
      *
      * a helper method that inserts the given node
-     ***************************************************/
+     */
     public void insertRBT(Node<T> newNode) {
         if(isEmpty() || root.item == newNode.item) {
             root = newNode;
@@ -123,15 +123,13 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         }
         root.color = "BLACK";
 
-        // postModification(modified);
     } //end of insert
 
-    /****************************************************
-     * bstInsert
+    /*
+     * findBranch
      *
-     * A regular binary search tree insert.
-     * Finds the correct placement off the nodes data and inserts.
-     ***************************************************/
+     * Finds the correct placement off the nodes to create the arraylist for reference
+     */
     public void findBranch(Node<T> newNode) {
         rblist.clear();
         Node<T> curr = root;
@@ -150,7 +148,6 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
         } //end of while
-
 
         //insert the node in the correct spot
         if(prev == null) {
@@ -184,11 +181,11 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         } //end of while
     }
 
-    /****************************************************
+    /*
      * fixUp
      *
      * Corrects the insertion to work for the red black tree.
-     ***************************************************/
+     */
     public void fixUp(Node<T> curr) {
         Node<T> rootNode = rblist.get(0);
         int size = rblist.size() - 1;
@@ -278,11 +275,11 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     }//end of fixUp
 
 
-    /****************************************************
+    /*
      * leftRotate
      *
      * perform a left rotation on the tree
-     ***************************************************/
+     */
     public void leftRotate(Node<T> curr, int i) {
         //set up the variables
         int size = rblist.size() - 1;
@@ -312,11 +309,11 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     } //end of left rotate
 
 
-    /****************************************************
+    /*
      * rightRotate
      *
      * perform a right rotation on the tree
-     ***************************************************/
+     */
     public void rightRotate(Node<T> curr, int i) {
         //set up the variables
         int size = rblist.size() - 1;
@@ -370,6 +367,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
     } //end of getDepth
 
 
+    /*
+    * method to help find the previous node in the list
+    * */
     public Node<T> findPreviousIndex(Node<T> find) {
         Node<T> temp = find;
         if(find != root) {
@@ -389,7 +389,6 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
 
     //hook methods
-
     @Override
     protected void nodeTraversed(Node<T> currentNode) {
         currentNode.color = "RED";
@@ -406,7 +405,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         this.treeRepository.add(new BinarySearchTree<>(modifiedRoot));
         this.root = modifiedRoot; // Update the current root node.
         this.visitedNodes.clear();
-        this.test.clear();
+        this.nodeStack.clear();
     }
 
     @Override
@@ -439,7 +438,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
 
     /*
      * Remove methods
-     * */
+     */
     @Override
     public void remove(T find) {
         testlist.clear();
@@ -458,6 +457,9 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
         this.postModification(root);
     }
 
+    /*
+    * methods to help add nodes to the arraylist and remove items
+    * */
     public void addToList() {
         addToList(root);
     }
