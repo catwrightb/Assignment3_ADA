@@ -67,7 +67,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
      */
     public boolean contains(T key) {
         Node<T> node = root;
-        while(node != null) {
+        while(node != null && node.item != null) {
             if(key.compareTo(node.item) == 0) {
                 return true;
             } else if(key.compareTo(node.item) < 0) {

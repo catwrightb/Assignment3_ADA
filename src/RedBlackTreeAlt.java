@@ -442,6 +442,7 @@ public class RedBlackTreeAlt<T extends Comparable<T>> extends BinarySearchTree<T
      * */
     @Override
     public void remove(T find) {
+        testlist.clear();
         RedBlackTreeAlt<T> tree2 = new RedBlackTreeAlt<>();
         this.addToList();
 

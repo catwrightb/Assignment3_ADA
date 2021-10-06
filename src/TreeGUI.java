@@ -100,37 +100,43 @@ public class TreeGUI extends JPanel implements ActionListener, KeyListener {
         if(!addNodeTextField.getText().isEmpty() && treeType != null) {
             String[] userInput = addNodeTextField.getText().trim().split(",");
 
-            if(!isNumber(userInput[0])) {
+
+            if (!isNumber(userInput[0])) {
                 JOptionPane.showMessageDialog(this, "Please enter numbers only", "INFO", JOptionPane.ERROR_MESSAGE);
             } else {
-                switch(treeType) {
-                    case "Binary Search Tree":
-                        // Add parsed user input(s) into BST.
-                        Arrays.stream(userInput).forEach(element -> binarySearchTree.add(Integer.parseInt(element)));
-                        localRoot = binarySearchTree.root;
+                if (!containedInTree(userInput[0]) || localRoot.item==null) {
+                    switch (treeType) {
+                        case "Binary Search Tree":
+                            // Add parsed user input(s) into BST.
+                            Arrays.stream(userInput).forEach(element -> binarySearchTree.add(Integer.parseInt(element)));
+                            localRoot = binarySearchTree.root;
 //                        System.out.println(binarySearchTree);
-                        break;
-                    case "Persistent":
-                        // Add parsed user input(s) into persistentBST.
-                        Arrays.stream(userInput).forEach(element -> persistentBST.add(Integer.parseInt(element)));
-                        localRoot = persistentBST.root;
-                        versionSelected = persistentBST.getCurrentVersionNo();
+                            break;
+                        case "Persistent":
+                            // Add parsed user input(s) into persistentBST.
+                            Arrays.stream(userInput).forEach(element -> persistentBST.add(Integer.parseInt(element)));
+                            localRoot = persistentBST.root;
+                            versionSelected = persistentBST.getCurrentVersionNo();
 //                        System.out.println(persistentBST);
-                        break;
-                    case "Red and Black Tree":
-                        // Add parsed user input(s) into RBT.
-                        Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
-                        localRoot = redBlackTree.root;
-                        versionSelected = redBlackTree.getCurrentVersionNo();
+                            break;
+                        case "Red and Black Tree":
+                            // Add parsed user input(s) into RBT.
+                            Arrays.stream(userInput).forEach(element -> redBlackTree.insertRB(Integer.parseInt(element)));
+                            localRoot = redBlackTree.root;
+                            versionSelected = redBlackTree.getCurrentVersionNo();
 //                        System.out.println(redBlackTree);
-                        break;
-                    default:
-                        JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(this, "Please select a valid tree structure first!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    addNodeTextField.setText("");
+                    nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
+                    drawPanel.repaint();
+                    toggleVersionComboBox();
+                } else {
+                    JOptionPane.showMessageDialog(this, "This value is already present.", "Error", JOptionPane.ERROR_MESSAGE);
+                    removeNodeTextField.setText("");
                 }
-                addNodeTextField.setText("");
-                nodeCounterLabel.setText("Number of Nodes: " + TreeBuilder.countNodes(localRoot));
-                drawPanel.repaint();
-                toggleVersionComboBox();
             }
         }
     }
